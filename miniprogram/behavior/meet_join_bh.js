@@ -8,8 +8,10 @@ module.exports = Behavior({
 	/**
 	 * 页面的初始数据
 	 */
-	data: {
-		isLoad: false,
+		data: {
+			isLoad: false,
+			childList: [],
+			childIdx: -1,
 
 		forms: [{
 			mark: 'PCERZITIQH',
@@ -73,10 +75,14 @@ module.exports = Behavior({
 				return;
 			}
 
+			let childList = await cloudHelper.callCloudData('my/child_list', {}, {
+				title: 'bar'
+			});
 
 			this.setData({
 				isLoad: true,
 				meet,
+				childList,
 			});
 
 		},
@@ -131,8 +137,32 @@ module.exports = Behavior({
 			this.selectComponent("#form-show").checkForms();
 		},
 
+		bindChildTap: function (e) {
+			this.setData({
+				childIdx: pageHelper.dataset(e, 'idx')
+			});
+		},
+
 		bindSubmitCmpt: async function (e) {
 			let forms = e.detail;
+			let child = this.data.childList[this.data.childIdx];
+			if (!child) {
+				return pageHelper.showModal('请先选择孩子；如未添加，请先到「我的-孩子档案」维护');
+			}
+
+			forms = forms.filter(item => item.mark != 'CHILD_ID' && item.mark != 'CHILD_NAME');
+			forms.unshift({
+				mark: 'CHILD_NAME',
+				val: child.CHILD_NAME,
+				title: '孩子姓名',
+				type: 'line'
+			});
+			forms.unshift({
+				mark: 'CHILD_ID',
+				val: child._id,
+				title: '孩子ID',
+				type: 'line'
+			});
 
 			let callback = async () => {
 				try {

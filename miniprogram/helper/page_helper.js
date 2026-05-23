@@ -40,20 +40,6 @@
 			},
 			{
 				type: 'line',
-				title: '孩子姓名',
-				desc: '请填写孩子姓名',
-				must: true,
-				len: 50,
-				onlySet: {
-					mode: 'all',
-					cnt: -1
-				},
-				selectOptions: ['', ''],
-				mobileTruth: true,
-				checkBoxLimit: 2,
-			},
-			{
-				type: 'line',
 				title: '手机',
 				desc: '请填写您的手机号码',
 				must: true,

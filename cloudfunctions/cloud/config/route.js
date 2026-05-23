@@ -28,6 +28,9 @@ module.exports = {
 	'my/my_join_detail': 'meet_controller@getMyJoinDetail',
 	'my/my_join_someday': 'meet_controller@getMyJoinSomeday',
 	'my/my_join_checkin': 'meet_controller@userSelfCheckin', 
+	'my/child_list': 'my_controller@getChildList',
+	'my/child_save': 'my_controller@saveChild',
+	'my/child_del': 'my_controller@delChild',
 
 	'test/test': 'test/test_controller@test',
 	'test/meet_test_join': 'test/test_meet_controller@testJoin',
