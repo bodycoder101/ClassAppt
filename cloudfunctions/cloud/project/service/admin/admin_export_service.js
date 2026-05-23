@@ -50,7 +50,47 @@ class AdminExportService extends BaseAdminService {
 		endDay,
 		status
 	}) {
-		this.AppError('此功能暂不开放，如有需要请加作者微信：cclinux0730');
+		let meet = await MeetModel.getOne(meetId, 'MEET_TITLE,MEET_FORM_SET');
+		if (!meet) this.AppError('预约项目不存在');
+
+		let where = {
+			JOIN_MEET_ID: meetId,
+			JOIN_MEET_DAY: ['between', startDay, endDay]
+		};
+		if (Number(status) != 999) where.JOIN_STATUS = Number(status);
+
+		let orderBy = {
+			JOIN_MEET_DAY: 'asc',
+			JOIN_MEET_TIME_START: 'asc',
+			JOIN_ADD_TIME: 'asc'
+		};
+		let fields = 'JOIN_MEET_TITLE,JOIN_MEET_DAY,JOIN_MEET_TIME_START,JOIN_MEET_TIME_END,JOIN_STATUS,JOIN_IS_CHECKIN,JOIN_CODE,JOIN_REASON,JOIN_FORMS,JOIN_ADD_TIME';
+		let list = await JoinModel.getAllBig(where, fields, orderBy, 1000);
+
+		let formSet = meet.MEET_FORM_SET || [];
+		let header = ['课程', '日期', '开始时间', '结束时间', '状态', '签到', '核销码', '原因', '预约时间'];
+		for (let k in formSet) header.push(formSet[k].title);
+
+		let data = [header];
+		for (let k in list) {
+			let row = [
+				list[k].JOIN_MEET_TITLE,
+				list[k].JOIN_MEET_DAY,
+				list[k].JOIN_MEET_TIME_START,
+				list[k].JOIN_MEET_TIME_END,
+				JoinModel.getDesc('STATUS', list[k].JOIN_STATUS),
+				list[k].JOIN_IS_CHECKIN == 1 ? '已签到' : '未签到',
+				list[k].JOIN_CODE,
+				list[k].JOIN_REASON || '',
+				timeUtil.timestamp2Time(list[k].JOIN_ADD_TIME)
+			];
+			for (let j in formSet) {
+				row.push(this._getValByForm(list[k].JOIN_FORMS || [], formSet[j].mark, formSet[j].title));
+			}
+			data.push(row);
+		}
+
+		return await new DataService().exportDataExcel(EXPORT_JOIN_DATA_KEY, meet.MEET_TITLE + '预约名单', list.length, data);
 
 	}
 
@@ -72,7 +112,38 @@ class AdminExportService extends BaseAdminService {
 	/**导出用户数据 */
 	async exportUserDataExcel(condition) {
 
-		this.AppError('此功能暂不开放，如有需要请加作者微信：cclinux0730');
+		let where = {};
+		if (condition) {
+			try {
+				where = JSON.parse(decodeURIComponent(condition));
+			} catch (ex) {
+				this.AppError('导出条件错误');
+			}
+		}
+
+		let orderBy = {
+			USER_ADD_TIME: 'desc'
+		};
+		let list = await UserModel.getAllBig(where, '*', orderBy, 1000);
+
+		let data = [
+			['姓名', '手机', '状态', '登录次数', '最近登录时间', '注册时间', '备注/单位', '城市', '职业领域']
+		];
+		for (let k in list) {
+			data.push([
+				list[k].USER_NAME || '',
+				list[k].USER_MOBILE || '',
+				UserModel.getDesc('STATUS', list[k].USER_STATUS),
+				list[k].USER_LOGIN_CNT || 0,
+				list[k].USER_LOGIN_TIME ? timeUtil.timestamp2Time(list[k].USER_LOGIN_TIME) : '',
+				timeUtil.timestamp2Time(list[k].USER_ADD_TIME),
+				list[k].USER_WORK || '',
+				list[k].USER_CITY || '',
+				list[k].USER_TRADE || ''
+			]);
+		}
+
+		return await new DataService().exportDataExcel(EXPORT_USER_DATA_KEY, '用户数据', list.length, data);
 
 	}
 }

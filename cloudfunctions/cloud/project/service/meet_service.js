@@ -85,7 +85,9 @@ class MeetService extends BaseService {
 		let ret = await JoinModel.groupCount(whereJoin, 'JOIN_STATUS');
 
 		let stat = { //统计数据
+			waitCheckCnt: ret['JOIN_STATUS_0'] || 0, //0=待审核,
 			succCnt: ret['JOIN_STATUS_1'] || 0, //1=预约成功,
+			refuseCnt: ret['JOIN_STATUS_8'] || 0, //8=审核不通过,
 			cancelCnt: ret['JOIN_STATUS_10'] || 0, //10=已取消, 
 			adminCancelCnt: ret['JOIN_STATUS_99'] || 0, //99=后台取消
 		};
@@ -156,7 +158,7 @@ class MeetService extends BaseService {
 
 		data.JOIN_FORMS = forms;
 
-		data.JOIN_STATUS = JoinModel.STATUS.SUCC;
+		data.JOIN_STATUS = meet.MEET_NEED_CHECK == 1 ? JoinModel.STATUS.WAIT : JoinModel.STATUS.SUCC;
 		data.JOIN_CODE = dataUtil.genRandomIntString(15);
 
 		// 入库
@@ -176,11 +178,12 @@ class MeetService extends BaseService {
 		}
 
 		// 统计
-		this.statJoinCnt(meetId, timeMark);
+		await this.statJoinCnt(meetId, timeMark);
 
 		return {
 			result: 'ok',
-			joinId
+			joinId,
+			status: data.JOIN_STATUS
 		}
 	}
 
@@ -247,7 +250,8 @@ class MeetService extends BaseService {
 
 		// 时段总人数限制
 		if (timeSet.isLimit) {
-			if (timeSet.stat.succCnt >= timeSet.limit) {
+			let usedCnt = (timeSet.stat.succCnt || 0) + (timeSet.stat.waitCheckCnt || 0);
+			if (usedCnt >= timeSet.limit) {
 				this.AppError('该时段预约人员已满，请选择其他');
 			}
 		}
@@ -293,7 +297,7 @@ class MeetService extends BaseService {
 			JOIN_MEET_ID: meetId,
 			JOIN_MEET_TIME_MARK: timeMark,
 			JOIN_USER_ID: userId,
-			JOIN_STATUS: JoinModel.STATUS.SUCC
+			JOIN_STATUS: ['in', [JoinModel.STATUS.WAIT, JoinModel.STATUS.SUCC]]
 		}
 		let cnt = await JoinModel.count(where);
 		this._meetLog(meet, `预约次数规则,mode=本时段可预约1次`, `当前已预约=${cnt}次`);
@@ -358,7 +362,8 @@ class MeetService extends BaseService {
 				if (timeNode.status != 1) continue;
 
 				// 判断数量是否已满
-				if (timeNode.isLimit && timeNode.stat.succCnt >= timeNode.limit)
+				let usedCnt = (timeNode.stat.succCnt || 0) + (timeNode.stat.waitCheckCnt || 0);
+				if (timeNode.isLimit && usedCnt >= timeNode.limit)
 					timeNode.error = '预约已满';
 
 				// 截止规则
@@ -387,6 +392,11 @@ class MeetService extends BaseService {
 		ret.MEET_IS_SHOW_LIMIT = meet.MEET_IS_SHOW_LIMIT;
 		ret.MEET_TITLE = meet.MEET_TITLE;
 		ret.MEET_CONTENT = meet.MEET_CONTENT;
+		ret.MEET_TEACHER = meet.MEET_TEACHER;
+		ret.MEET_PLACE = meet.MEET_PLACE;
+		ret.MEET_AGE = meet.MEET_AGE;
+		ret.MEET_CLASS = meet.MEET_CLASS;
+		ret.MEET_COURSE_MODE = meet.MEET_COURSE_MODE;
 
 
 		return ret;
@@ -536,7 +546,7 @@ class MeetService extends BaseService {
 			'MEET_ADD_TIME': 'desc'
 		};
 
-		let fields = 'MEET_TITLE,MEET_DAYS_SET,MEET_STYLE_SET';
+		let fields = 'MEET_TITLE,MEET_DAYS_SET,MEET_STYLE_SET,MEET_TEACHER,MEET_PLACE,MEET_AGE,MEET_CLASS';
 
 		let list = await MeetModel.getAll(where, fields, orderBy);
 
@@ -552,6 +562,10 @@ class MeetService extends BaseService {
 			node.title = list[k].MEET_TITLE;
 			node.pic = list[k].MEET_STYLE_SET.pic;
 			node._id = list[k]._id;
+			node.teacher = list[k].MEET_TEACHER;
+			node.place = list[k].MEET_PLACE;
+			node.age = list[k].MEET_AGE;
+			node.className = list[k].MEET_CLASS;
 			retList.push(node);
 
 		}
@@ -596,7 +610,7 @@ class MeetService extends BaseService {
 			'MEET_ORDER': 'asc',
 			'MEET_ADD_TIME': 'desc'
 		};
-		let fields = 'MEET_TITLE,MEET_STYLE_SET,MEET_DAYS';
+		let fields = 'MEET_TITLE,MEET_STYLE_SET,MEET_DAYS,MEET_TEACHER,MEET_PLACE,MEET_AGE,MEET_CLASS';
 
 		let where = {};
 		if (typeId && typeId !== '0') where.MEET_TYPE_ID = typeId;
@@ -641,7 +655,7 @@ class MeetService extends BaseService {
 			JOIN_USER_ID: userId,
 			_id: joinId,
 			JOIN_IS_CHECKIN: 0, // 签到不能取消
-			JOIN_STATUS: JoinModel.STATUS.SUCC
+			JOIN_STATUS: ['in', [JoinModel.STATUS.WAIT, JoinModel.STATUS.SUCC]]
 		};
 		let join = await JoinModel.getOne(where);
 
@@ -676,7 +690,7 @@ class MeetService extends BaseService {
 			JOIN_IS_CHECKIN: 0,
 		}
 		await JoinModel.edit(where, data);
-		this.statJoinCnt(join.JOIN_MEET_ID, join.JOIN_MEET_TIME_MARK);
+		await this.statJoinCnt(join.JOIN_MEET_ID, join.JOIN_MEET_TIME_MARK);
 
 	}
 
@@ -748,7 +762,7 @@ class MeetService extends BaseService {
 					break;
 				}
 				case 'succ': { //预约成功
-					where.JOIN_STATUS = JoinModel.STATUS.COMM;
+					where.JOIN_STATUS = JoinModel.STATUS.SUCC;
 					//where.JOIN_MEET_DAY = ['>=', timeUtil.time('Y-M-D')];
 					//where.JOIN_MEET_TIME_START = ['>=', timeUtil.time('h:m')];
 					break;

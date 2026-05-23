@@ -25,7 +25,13 @@ class MeetController extends BaseController {
 			node.type = 'meet';
 			node._id = list[k]._id;
 			node.title = list[k].MEET_TITLE;
-			node.desc = list[k].MEET_STYLE_SET.desc;
+			let desc = list[k].MEET_STYLE_SET.desc || '';
+			let tags = [];
+			if (list[k].MEET_TEACHER) tags.push(list[k].MEET_TEACHER);
+			if (list[k].MEET_PLACE) tags.push(list[k].MEET_PLACE);
+			if (list[k].MEET_AGE) tags.push(list[k].MEET_AGE);
+			if (list[k].MEET_CLASS) tags.push(list[k].MEET_CLASS);
+			node.desc = tags.length ? tags.join(' / ') : desc;
 			node.ext = list[k].openRule;
 			node.pic = list[k].MEET_STYLE_SET.pic;
 			ret.push(node);
