@@ -400,7 +400,11 @@ Page({
 				break;
 			case 1: {
 
-				if (oldStatus == 10)
+				if (oldStatus == 0)
+					pageHelper.showConfirm('确认审核通过？', callback);
+				else if (oldStatus == 8)
+					pageHelper.showConfirm('确认恢复为「预约成功」状态？', callback);
+				else if (oldStatus == 10)
 					pageHelper.showConfirm('确认变更为「预约成功」？', callback);
 				else if (oldStatus == 99)
 					pageHelper.showConfirm('确认恢复为「预约成功」状态？', callback);
@@ -445,10 +449,18 @@ Page({
 				type: '',
 				value: ''
 			}, {
+				label: `待审核`,
+				type: 'status',
+				value: 0
+			}, {
 				label: `成功`,
 				type: 'status',
 				value: 1
-			}, 
+			}, {
+				label: `审核未通过`,
+				type: 'status',
+				value: 8
+			},
 			 
 			{
 				label: `已取消`,

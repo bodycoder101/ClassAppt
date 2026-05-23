@@ -36,6 +36,17 @@
 						<view class="content">【{{item.MEET_TYPE_NAME}}】</view>
 					</view>
 
+					<view class="info-item" wx:if="{{item.MEET_TEACHER || item.MEET_PLACE || item.MEET_AGE || item.MEET_CLASS}}">
+						<view class="title">课程信息</view>
+						<view class="mao">：</view>
+						<view class="content">
+							<text wx:if="{{item.MEET_TEACHER}}">{{item.MEET_TEACHER}}</text>
+							<text wx:if="{{item.MEET_PLACE}}"> / {{item.MEET_PLACE}}</text>
+							<text wx:if="{{item.MEET_AGE}}"> / {{item.MEET_AGE}}</text>
+							<text wx:if="{{item.MEET_CLASS}}"> / {{item.MEET_CLASS}}</text>
+						</view>
+					</view>
+
 					<view class="info-item">
 						<view class="title">时段</view>
 						<view class="mao">：</view>

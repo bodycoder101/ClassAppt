@@ -6,6 +6,12 @@
 
 		<view class="top-area">
 			<view class="top-title text-cut">{{meet.MEET_TITLE}}</view>
+			<view class="padding-left padding-right padding-bottom-xs text-grey text-s" wx:if="{{meet.MEET_TEACHER || meet.MEET_PLACE || meet.MEET_AGE || meet.MEET_CLASS}}">
+				<text wx:if="{{meet.MEET_TEACHER}}">{{meet.MEET_TEACHER}}</text>
+				<text wx:if="{{meet.MEET_PLACE}}"> / {{meet.MEET_PLACE}}</text>
+				<text wx:if="{{meet.MEET_AGE}}"> / {{meet.MEET_AGE}}</text>
+				<text wx:if="{{meet.MEET_CLASS}}"> / {{meet.MEET_CLASS}}</text>
+			</view>
 			<view class="top-menu">
 				<view bindtap="bindShowMindTap" class="item {{showMind?'cur text-project':''}}"><text class="icon-friend margin-right-xxs"></text>{{skin.MEET_NAME}}须知</view>
 				<view bindtap="bindShowTimeTap" class="item {{showTime?'cur text-project':''}}"><text class="icon-remind margin-right-xxs"></text>可预约时段</view>
@@ -66,7 +72,7 @@
 									<view class="time-text limit {{itm.error?'error':''}}">
 										<text>{{itm.start}}～{{itm.end}}</text>
 										<block wx:if="{{!itm.error}}">
-											<text wx:if="{{meet.MEET_IS_SHOW_LIMIT==1&&itm.isLimit}}" class="limit-text">({{itm.stat.succCnt}}<text style="margin:0 5rpx">/</text>{{itm.limit}})</text>
+											<text wx:if="{{meet.MEET_IS_SHOW_LIMIT==1&&itm.isLimit}}" class="limit-text">({{itm.stat.succCnt + (itm.stat.waitCheckCnt||0)}}<text style="margin:0 5rpx">/</text>{{itm.limit}})</text>
 											<text wx:if="{{meet.MEET_IS_SHOW_LIMIT==1&&!itm.isLimit}}" class='limit-text'>(人数不限)</text>
 											<text wx:if="{{meet.MEET_IS_SHOW_LIMIT==0}}" class='limit-text'>(可预约)</text>
 										</block>

@@ -15,9 +15,15 @@
 						<text class="icon-remind margin-right-xs text-s"></text><text class="text-cut">{{join.JOIN_MEET_DAY}} {{join.JOIN_MEET_TIME_START}}～{{join.JOIN_MEET_TIME_END}}</text>
 					</view>
 					<view class="data">
-						<text wx:if="{{join.JOIN_STATUS==1}}" class="text-green"><text class="icon-newshot margin-right-xxs"></text>预约成功{{join.JOIN_IS_CHECKIN==1?'，已签到':''}}</text> 
+						<text wx:if="{{join.JOIN_STATUS==0}}" class="text-orange"><text class="icon-time margin-right-xxs"></text>待审核</text>
+
+						<text wx:elif="{{join.JOIN_STATUS==1}}" class="text-green"><text class="icon-newshot margin-right-xxs"></text>预约成功{{join.JOIN_IS_CHECKIN==1?'，已签到':''}}</text> 
 						
 						<button wx:if="{{(join.JOIN_STATUS==1||join.JOIN_STATUS==0) && join.JOIN_IS_CHECKIN==0}}" bindtap="bindCancelTap" class="btn mid bg-grey light  margin-left-s"><text class="icon-close"></text>取消预约</button> 
+
+						<block wx:if="{{join.JOIN_STATUS==8}}">
+							<text class="text-orange"><text class="icon-bad margin-right-xxs"></text>审核未通过<text class="text-grey" wx:if="{{join.JOIN_REASON}}">：{{join.JOIN_REASON}}</text></text>
+						</block>
 
 						<text wx:if="{{join.JOIN_STATUS==10}}" class="text-grey"><text class="icon-bad margin-right-xxs"></text>已取消</text>
 

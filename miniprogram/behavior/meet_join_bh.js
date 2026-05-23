@@ -145,7 +145,7 @@ module.exports = Behavior({
 						forms
 					}
 					await cloudHelper.callCloudSumbit('meet/join', params, opts).then(res => {
-						let content = '预约成功！'
+						let content = res.data.status == 0 ? '提交成功，请等待审核！' : '预约成功！'
 
 						let joinId = res.data.joinId;
 						wx.showModal({
