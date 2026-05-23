@@ -1,0 +1,51 @@
+<view wx:if="{{!isLoad}}" class="margin-top load loading text-l load-project"></view>
+
+<view wx:if="{{isLoad}}" class="main padding-project">
+	<view class="comm-list menu card-project shadow-project">
+		<view wx:if="{{list.length==0}}" class="item">
+			<view class="content">
+				<text class="text-grey">暂无孩子档案</text>
+			</view>
+		</view>
+
+		<view class="item arrow" wx:for="{{list}}" wx:key="key" bindtap="bindEditTap" data-idx="{{index}}">
+			<view class="content">
+				<text class="icon-peoplefill my-icon-project text-project"></text>
+				<view>
+					<view class="text-black">{{item.CHILD_NAME}}</view>
+					<view class="text-grey text-s">
+						<text wx:if="{{item.CHILD_SEX}}">{{item.CHILD_SEX}}</text>
+						<text wx:if="{{item.CHILD_BIRTHDAY}}"> / {{item.CHILD_BIRTHDAY}}</text>
+						<text wx:if="{{item.CHILD_CLASS}}"> / {{item.CHILD_CLASS}}</text>
+					</view>
+				</view>
+			</view>
+			<view catchtap="bindDelTap" data-id="{{item._id}}" class="text-grey"><text class="icon-delete"></text></view>
+		</view>
+	</view>
+
+	<button bindtap="bindAddTap" class="btn-base btn-project margin-top-l">新增孩子</button>
+
+	<cmpt-modal model:show="{{formShow}}" type="dialog" title="{{formId?'编辑孩子':'新增孩子'}}" bind:click="bindSaveCmpt" class="modal-form" cancelText="返回" confirmText="保存">
+		<view class="form-group">
+			<view class="title must">姓名</view>
+			<input placeholder="孩子姓名" model:value="{{formName}}" maxlength="30"></input>
+		</view>
+		<view class="form-group">
+			<view class="title">性别</view>
+			<input placeholder="男/女" model:value="{{formSex}}" maxlength="10"></input>
+		</view>
+		<view class="form-group">
+			<view class="title">生日</view>
+			<input placeholder="如：2022-05-01" model:value="{{formBirthday}}" maxlength="20"></input>
+		</view>
+		<view class="form-group">
+			<view class="title">班级</view>
+			<input placeholder="如：托小班" model:value="{{formClassName}}" maxlength="30"></input>
+		</view>
+		<view class="form-group align-start">
+			<view class="title">备注</view>
+			<textarea placeholder="过敏、接送等备注" model:value="{{formMemo}}" maxlength="200" style="height:120rpx"></textarea>
+		</view>
+	</cmpt-modal>
+</view>

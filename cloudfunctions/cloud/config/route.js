@@ -28,6 +28,12 @@ module.exports = {
 	'my/my_join_detail': 'meet_controller@getMyJoinDetail',
 	'my/my_join_someday': 'meet_controller@getMyJoinSomeday',
 	'my/my_join_checkin': 'meet_controller@userSelfCheckin', 
+	'my/child_list': 'my_controller@getChildList',
+	'my/child_save': 'my_controller@saveChild',
+	'my/child_del': 'my_controller@delChild',
+	'my/leave_apply': 'my_controller@applyLeave',
+	'my/leave_list': 'my_controller@getLeaveList',
+	'my/leave_cancel': 'my_controller@cancelLeave',
 
 	'test/test': 'test/test_controller@test',
 	'test/meet_test_join': 'test/test_meet_controller@testJoin',
@@ -88,5 +94,7 @@ module.exports = {
 	'admin/user_data_export': 'admin/admin_export_controller@userDataExport',
 	'admin/user_data_del': 'admin/admin_export_controller@userDataDel#noDemo',
 
+	'admin/leave_list': 'admin/admin_daycare_controller@getLeaveList',
+	'admin/leave_status': 'admin/admin_daycare_controller@statusLeave#noDemo',
 
 }

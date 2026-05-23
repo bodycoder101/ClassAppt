@@ -19,6 +19,12 @@
 					<image class="img loading" src="{{item.pic}}" lazy-load="{{true}}" mode="aspectFill" />
 				</block>
 				<view class="title text-cut">{{item.title}}</view>
+				<view class="time text-cut" wx:if="{{item.teacher || item.place || item.age || item.className}}">
+					<text wx:if="{{item.teacher}}">{{item.teacher}}</text>
+					<text wx:if="{{item.place}}"> / {{item.place}}</text>
+					<text wx:if="{{item.age}}"> / {{item.age}}</text>
+					<text wx:if="{{item.className}}"> / {{item.className}}</text>
+				</view>
 				<view class="time"><text class="icon-time margin-right-xxs"></text>{{item.timeDesc}}</view>
 			</view>
 

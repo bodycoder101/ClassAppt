@@ -94,7 +94,7 @@ async function handlerCloudFiles(oldFiles, newFiles) {
 			}
 		}
 		// 新组里不存在，直接删除
-		if (isDel && oldFiles[i]) { 
+		if (isDel && oldFiles[i] && oldFiles[i].startsWith('cloud://')) { 
 			let result = await cloud.deleteFile({
 				fileList: [oldFiles[i]],
 			});
@@ -131,7 +131,7 @@ async function handlerCloudFilesByRichEditor(oldFiles, newFiles) {
 			}
 		}
 		// 新组里不存在，直接删除
-		if (isDel && oldFiles[i].type == 'img' && oldFiles[i].val) {
+		if (isDel && oldFiles[i].type == 'img' && oldFiles[i].val && oldFiles[i].val.startsWith('cloud://')) {
 
 			let result = await cloud.deleteFile({
 				fileList: [oldFiles[i].val],
@@ -151,6 +151,8 @@ async function handlerCloudFilesByRichEditor(oldFiles, newFiles) {
 async function deleteFiles(list = []) {
 	const cloud = cloudBase.getCloud();
 	if (!Array.isArray(list) || list.length == 0) return;
+	list = list.filter(item => item && item.startsWith('cloud://'));
+	if (list.length == 0) return;
 	await cloud.deleteFile({
 		fileList: list,
 	});

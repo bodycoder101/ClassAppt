@@ -34,7 +34,11 @@
 							<view class="time">
 								<text>{{item.JOIN_MEET_TIME_START}}~{{item.JOIN_MEET_TIME_END}}</text>
 
-								<text wx:if="{{item.JOIN_STATUS==1}}" class="text-green status">预约成功{{item.JOIN_IS_CHECKIN==1?'，已签到':''}}</text>
+								<text wx:if="{{item.JOIN_STATUS==0}}" class="text-orange status">待审核</text>
+
+								<text wx:elif="{{item.JOIN_STATUS==1}}" class="text-green status">预约成功{{item.JOIN_IS_CHECKIN==1?'，已签到':''}}</text>
+
+								<text wx:elif="{{item.JOIN_STATUS==8}}" class="text-orange status">审核未通过</text>
 
 								<text wx:elif="{{item.JOIN_STATUS==10}}" class="text-grey status">已取消</text>
 
@@ -54,6 +58,18 @@
 					<view class="content">
 						<text class="icon-activityfill my-icon-project text-project"></text>
 						<text class="text-black">我的所有{{skin.MEET_NAME}}</text>
+					</view>
+				</view>
+				<view class="item arrow" bindtap="url" data-url="../child/my_child">
+					<view class="content">
+						<text class="icon-peoplefill my-icon-project text-orange"></text>
+						<text class="text-black">孩子档案</text>
+					</view>
+				</view>
+				<view class="item arrow" bindtap="url" data-url="../leave/my_leave">
+					<view class="content">
+						<text class="icon-remind my-icon-project text-blue"></text>
+						<text class="text-black">请假记录</text>
 					</view>
 				</view>
 				<view class="item arrow" bindtap="url" data-url="../edit/my_edit">

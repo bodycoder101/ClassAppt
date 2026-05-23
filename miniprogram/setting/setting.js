@@ -16,6 +16,7 @@
  	// #### 预约相关
  	MEET_CAN_NULL_TIME: false, // 是否允许有无时段的日期保存和展示  
  	MEET_PIC_PATH: 'meet/pic/',
+	MEET_SUBSCRIBE_TMPL_IDS: [], // 微信订阅消息模板ID，配置后预约/取消等关键动作会先请求授权
 
  	//#################  
  	CHECK_CONTENT: false, //图片文字是否校验  

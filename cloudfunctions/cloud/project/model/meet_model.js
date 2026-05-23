@@ -32,6 +32,13 @@ MeetModel.DB_STRUCTURE = {
 	MEET_TYPE_ID: 'string|true|comment=分类编号',
 	MEET_TYPE_NAME: 'string|true|comment=分类冗余', 
 
+	MEET_TEACHER: 'string|false|comment=授课老师',
+	MEET_PLACE: 'string|false|comment=上课地点',
+	MEET_AGE: 'string|false|comment=适合年龄',
+	MEET_CLASS: 'string|false|comment=适用班级',
+	MEET_COURSE_MODE: 'string|false|comment=课程模式 single=单次课,cycle=固定周期课,term=学期课',
+	MEET_NEED_CHECK: 'int|true|default=0|comment=是否需要预约审核 0=否,1=是',
+
 	MEET_IS_SHOW_LIMIT: 'int|true|default=1|comment=是否显示可预约人数',
 
 	MEET_STYLE_SET: 'object|true|default={}|comment=样式设置',

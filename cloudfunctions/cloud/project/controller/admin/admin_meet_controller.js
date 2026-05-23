@@ -252,6 +252,12 @@ class AdminMeetController extends BaseAdminController {
 			order: 'must|int|min:1|max:9999|name=排序号',
 			daysSet: 'must|array|name=预约时间设置', 
 			isShowLimit: 'must|int|in:0,1|name=是否显示可预约人数', 
+			teacher: 'string|max:30|name=授课老师',
+			place: 'string|max:50|name=上课地点',
+			age: 'string|max:30|name=适合年龄',
+			className: 'string|max:50|name=适用班级',
+			courseMode: 'string|in:single,cycle,term|name=课程模式',
+			needCheck: 'int|in:0,1|name=是否需要审核',
 
 			formSet: 'must|array|name=用户资料设置',
 		};
@@ -302,6 +308,12 @@ class AdminMeetController extends BaseAdminController {
 			daysSet: 'must|array|name=预约时间设置',
 		 
 			isShowLimit: 'must|int|in:0,1|name=是否显示可预约人数', 
+			teacher: 'string|max:30|name=授课老师',
+			place: 'string|max:50|name=上课地点',
+			age: 'string|max:30|name=适合年龄',
+			className: 'string|max:50|name=适用班级',
+			courseMode: 'string|in:single,cycle,term|name=课程模式',
+			needCheck: 'int|in:0,1|name=是否需要审核',
 
 			formSet: 'must|array|name=用户资料设置',
 		};

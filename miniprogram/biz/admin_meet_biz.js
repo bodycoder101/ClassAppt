@@ -20,7 +20,9 @@ const TIME_NODE = {
 	isLimit: false,
 	status: 1,
 	stat: { //统计数据 
+		waitCheckCnt: 0,
 		succCnt: 0,
+		refuseCnt: 0,
 		cancelCnt: 0,
 		adminCancelCnt: 0,
 	}
@@ -410,6 +412,12 @@ class AdminMeetBiz extends BaseBiz {
 			formTypeId: '',
 			formContent: '',
 			formOrder: 9999,
+			formTeacher: '',
+			formPlace: '',
+			formAge: '',
+			formClassName: '',
+			formCourseMode: 'single',
+			formNeedCheck: 0,
 			formStyleSet: {
 				pic: '',
 				desc: ''
@@ -511,6 +519,12 @@ AdminMeetBiz.CHECK_FORM = {
 	title: 'formTitle|must|string|min:2|max:50|name=标题',
 	typeId: 'formTypeId|must|id|name=分类',
 	order: 'formOrder|must|int|min:1|max:9999|name=排序号',
+	teacher: 'formTeacher|string|max:30|name=授课老师',
+	place: 'formPlace|string|max:50|name=上课地点',
+	age: 'formAge|string|max:30|name=适合年龄',
+	className: 'formClassName|string|max:50|name=适用班级',
+	courseMode: 'formCourseMode|string|in:single,cycle,term|name=课程模式',
+	needCheck: 'formNeedCheck|int|in:0,1|name=是否需要审核',
 
 	daysSet: 'formDaysSet|must|array|name=预约时间设置',
 	isShowLimit: 'formIsShowLimit|must|int|in:0,1|name=是否显示可预约人数',

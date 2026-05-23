@@ -16,6 +16,42 @@
 			</view>
 			<view wx:if="{{formTypeIdFocus}}" class="hint-desc error">{{formTypeIdFocus}}</view>
 
+			<view class="form-group">
+				<view class="title">授课老师</view>
+				<input placeholder="如：李老师" placeholder-class="phc" model:value="{{formTeacher}}" focus="{{formTeacherFocus}}" maxlength="30"></input>
+			</view>
+			<view wx:if="{{formTeacherFocus}}" class="hint-desc error">{{formTeacherFocus}}</view>
+
+			<view class="form-group">
+				<view class="title">上课地点</view>
+				<input placeholder="如：三楼音乐教室" placeholder-class="phc" model:value="{{formPlace}}" focus="{{formPlaceFocus}}" maxlength="50"></input>
+			</view>
+			<view wx:if="{{formPlaceFocus}}" class="hint-desc error">{{formPlaceFocus}}</view>
+
+			<view class="form-group">
+				<view class="title">适合年龄</view>
+				<input placeholder="如：2-3岁" placeholder-class="phc" model:value="{{formAge}}" focus="{{formAgeFocus}}" maxlength="30"></input>
+			</view>
+			<view wx:if="{{formAgeFocus}}" class="hint-desc error">{{formAgeFocus}}</view>
+
+			<view class="form-group">
+				<view class="title">适用班级</view>
+				<input placeholder="如：托小班、托大班" placeholder-class="phc" model:value="{{formClassName}}" focus="{{formClassNameFocus}}" maxlength="50"></input>
+			</view>
+			<view wx:if="{{formClassNameFocus}}" class="hint-desc error">{{formClassNameFocus}}</view>
+
+			<view class="form-group">
+				<view class="title">课程模式</view>
+				<cmpt-picker mark="courseMode" style="flex:1" model:item="{{formCourseMode}}" sourceDataStr="single=单次课,cycle=固定周期课,term=学期课" />
+			</view>
+			<view wx:if="{{formCourseModeFocus}}" class="hint-desc error">{{formCourseModeFocus}}</view>
+
+			<view class="form-group">
+				<view class="title">预约审核</view>
+				<cmpt-picker mark="needCheck" style="flex:1" model:item="{{formNeedCheck}}" sourceDataStr="0=无需审核,1=需要审核" />
+			</view>
+			<view wx:if="{{formNeedCheckFocus}}" class="hint-desc error">{{formNeedCheckFocus}}</view>
+
 			<view id="formStyleSet" class="form-group arrow" bindtap="url" data-url="../cover/admin_meet_cover">
 				<view class="title must">封面设置<text class="text-grey text-normal margin-left-xs">(必填)</text></view>
 				<view wx:if="{{formStyleSet.pic}}" class="form-text"></view>

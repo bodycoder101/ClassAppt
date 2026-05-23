@@ -15,6 +15,20 @@
 
 			</view>
 
+			<view class="form-box card-project shadow-project margin-top">
+				<view class="form-group">
+					<view class="line-desc">选择预约孩子</view>
+				</view>
+				<view wx:if="{{childList.length==0}}" class="form-group arrow" bindtap="url" data-url="../../my/child/my_child">
+					<view class="title text-orange">暂无孩子档案</view>
+					<view class="form-text">去添加</view>
+				</view>
+				<view wx:for="{{childList}}" wx:key="key" bindtap="bindChildTap" data-idx="{{index}}" class="form-group">
+					<view class="title text-cut">{{item.CHILD_NAME}}</view>
+					<view class="form-text {{childIdx==index?'text-project':'text-grey'}}">{{childIdx==index?'已选择':'选择'}}</view>
+				</view>
+			</view>
+
 			<!-- form content begin -->
 			<view class="form-box card-project shadow-project margin-top">
 				<view class="form-group">

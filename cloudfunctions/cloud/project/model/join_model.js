@@ -45,7 +45,7 @@ JoinModel.DB_STRUCTURE = {
 	   val:
 	*/
 
-	JOIN_STATUS: 'int|true|default=1|comment=状态 1=预约成功,10=已取消, 99=系统取消',
+	JOIN_STATUS: 'int|true|default=1|comment=状态 0=待审核,1=预约成功,8=审核不通过,10=已取消, 99=系统取消',
 
 	JOIN_REASON: 'string|false|comment=审核拒绝或者取消理由',
 
@@ -59,16 +59,20 @@ JoinModel.DB_STRUCTURE = {
 JoinModel.FIELD_PREFIX = "JOIN_";
 
 /**
- * 状态 1=预约成功,10=已取消, 99=后台取消 
+ * 状态 0=待审核,1=预约成功,8=审核不通过,10=已取消, 99=后台取消 
  */
 JoinModel.STATUS = {
+	WAIT: 0,
 	SUCC: 1,
+	REFUSE: 8,
 	CANCEL: 10,
 	ADMIN_CANCEL: 99
 };
 
 JoinModel.STATUS_DESC = {
+	WAIT: '待审核',
 	SUCC: '预约成功',
+	REFUSE: '审核不通过',
 	CANCEL: '已取消',
 	ADMIN_CANCEL: '系统取消',
 };

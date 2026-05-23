@@ -10,6 +10,7 @@ const util = require('../../../framework/utils/util.js');
 
 const UserModel = require('../../model/user_model.js');
 const JoinModel = require('../../model/join_model.js');
+const MeetService = require('../meet_service.js');
 
 class AdminUserService extends BaseAdminService {
 
@@ -97,7 +98,21 @@ class AdminUserService extends BaseAdminService {
 
 	/**删除用户 */
 	async delUser(id) {
-		this.AppError('此功能暂不开放，如有需要请加作者微信：cclinux0730');
+		let user = await UserModel.getOne(id, 'USER_MINI_OPENID');
+		if (!user) return;
+
+		let joins = await JoinModel.getAllBig({
+			JOIN_USER_ID: user.USER_MINI_OPENID
+		}, 'JOIN_MEET_ID,JOIN_MEET_TIME_MARK');
+		await JoinModel.del({
+			JOIN_USER_ID: user.USER_MINI_OPENID
+		});
+		await UserModel.del(id);
+
+		let meetService = new MeetService();
+		let marks = {};
+		for (let k in joins) marks[joins[k].JOIN_MEET_ID + '#' + joins[k].JOIN_MEET_TIME_MARK] = joins[k];
+		for (let key in marks) await meetService.statJoinCnt(marks[key].JOIN_MEET_ID, marks[key].JOIN_MEET_TIME_MARK);
 	}
 
 }

@@ -1,0 +1,61 @@
+<view wx:if="{{!isLoad}}" class="margin-top load loading text-l text-grey"></view>
+
+<block wx:if="{{isAdmin&&isLoad}}">
+	<cmpt-comm-list type="admin-leave" search="{{search}}" _menus="{{sortMenus}}" _items="{{sortItems}}" route="admin/leave_list" sortMenusDefaultIndex="1" topBottom="50" placeholder="搜索孩子/课程/原因" bind:list="bindCommListCmpt">
+		<view class="admin-comm-list">
+			<view wx:if="{{dataList && dataList.total }}" class="load text-grey">共有{{dataList.total}}条请假记录</view>
+
+			<view class="item" wx:for="{{dataList.list}}" wx:key="key">
+				<view class="header">
+					<view class="left text-cut">{{item.LEAVE_MEET_TITLE}}</view>
+				</view>
+				<view class="info">
+					<view class="info-item">
+						<view class="title">孩子</view>
+						<view class="mao">：</view>
+						<view class="content">{{item.LEAVE_CHILD_NAME||'未记录'}}</view>
+					</view>
+					<view class="info-item">
+						<view class="title">时段</view>
+						<view class="mao">：</view>
+						<view class="content">{{item.LEAVE_MEET_DAY}} {{item.LEAVE_MEET_TIME_START}}～{{item.LEAVE_MEET_TIME_END}}</view>
+					</view>
+					<view class="info-item">
+						<view class="title">状态</view>
+						<view class="mao">：</view>
+						<view class="content">
+							<text wx:if="{{item.LEAVE_STATUS==0}}" class="text-orange">待审核</text>
+							<text wx:elif="{{item.LEAVE_STATUS==1}}" class="text-green">已通过</text>
+							<text wx:elif="{{item.LEAVE_STATUS==8}}" class="text-orange">已拒绝</text>
+							<text wx:elif="{{item.LEAVE_STATUS==10}}" class="text-grey">已取消</text>
+						</view>
+					</view>
+					<view class="info-item" wx:if="{{item.LEAVE_REASON}}">
+						<view class="title">原因</view>
+						<view class="mao">：</view>
+						<view class="content">{{item.LEAVE_REASON}}</view>
+					</view>
+					<view class="info-item" wx:if="{{item.LEAVE_ADMIN_REASON}}">
+						<view class="title">处理备注</view>
+						<view class="mao">：</view>
+						<view class="content">{{item.LEAVE_ADMIN_REASON}}</view>
+					</view>
+					<view class="oprt" wx:if="{{item.LEAVE_STATUS==0}}">
+						<view bindtap="bindStatusTap" data-idx="{{index}}" data-status="1" class="btn bg-olive light margin-right-s">通过</view>
+						<view bindtap="bindStatusTap" data-idx="{{index}}" data-status="8" class="btn bg-orange light margin-right-s">拒绝</view>
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<import src="../../../../tpls/public/list_load_tpl.wxml" />
+		<template is="listLoadTpl" data="{{dataList,skin:'text-grey',noHint:'暂无请假记录'}}" />
+	</cmpt-comm-list>
+
+	<cmpt-modal model:show="{{reasonModalShow}}" type="dialog" title="{{curStatus==1?'通过请假':'拒绝请假'}}" bind:click="bindStatusCmpt" class="modal-form" cancelText="返回" confirmText="确定">
+		<view class="form-group align-start">
+			<view class="title">备注</view>
+			<textarea placeholder="处理备注，可不填" model:value="{{formReason}}" maxlength="100" style="height:120rpx"></textarea>
+		</view>
+	</cmpt-modal>
+</block>

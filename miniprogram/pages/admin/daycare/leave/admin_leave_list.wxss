@@ -1,0 +1,3 @@
+.admin-comm-list .item .header .left {
+	font-weight: bold;
+}

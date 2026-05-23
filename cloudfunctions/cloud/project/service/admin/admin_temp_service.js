@@ -14,7 +14,11 @@ class AdminTempService extends BaseAdminService {
 		name,
 		times,
 	}) {
-		this.AppError('此功能暂不开放，如有需要请加作者微信：cclinux0730');
+		let data = {
+			TEMP_NAME: name,
+			TEMP_TIMES: this._normalizeTimes(times)
+		};
+		return await TempModel.insert(data);
 	}
 
 	/**更新数据 */
@@ -23,13 +27,25 @@ class AdminTempService extends BaseAdminService {
 		limit,
 		isLimit
 	}) {
-		this.AppError('此功能暂不开放，如有需要请加作者微信：cclinux0730');
+		let temp = await TempModel.getOne(id, 'TEMP_TIMES');
+		if (!temp) this.AppError('模板不存在');
+
+		let times = temp.TEMP_TIMES || [];
+		for (let k in times) {
+			times[k].isLimit = !!isLimit;
+			times[k].limit = Number(limit);
+		}
+		await TempModel.edit(id, {
+			TEMP_TIMES: times
+		});
+
+		return await this.getTempList();
 	}
 
 
 	/**删除数据 */
 	async delTemp(id) {
-		this.AppError('此功能暂不开放，如有需要请加作者微信：cclinux0730');
+		await TempModel.del(id);
 	}
 
 
@@ -42,6 +58,19 @@ class AdminTempService extends BaseAdminService {
 
 		let where = {};
 		return await TempModel.getAll(where, fields, orderBy);
+	}
+
+	_normalizeTimes(times = []) {
+		let list = [];
+		for (let k in times) {
+			list.push({
+				start: times[k].start,
+				end: times[k].end,
+				isLimit: !!times[k].isLimit,
+				limit: Number(times[k].limit || 0)
+			});
+		}
+		return list;
 	}
 }
 

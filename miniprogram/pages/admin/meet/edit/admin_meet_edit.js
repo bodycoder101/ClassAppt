@@ -59,6 +59,12 @@ Page({
 			// 表单数据   
 			formTitle: meet.MEET_TITLE,
 			formTypeId: meet.MEET_TYPE_ID,
+			formTeacher: meet.MEET_TEACHER || '',
+			formPlace: meet.MEET_PLACE || '',
+			formAge: meet.MEET_AGE || '',
+			formClassName: meet.MEET_CLASS || '',
+			formCourseMode: meet.MEET_COURSE_MODE || 'single',
+			formNeedCheck: meet.MEET_NEED_CHECK || 0,
 			formContent: meet.MEET_CONTENT,
 			formOrder: meet.MEET_ORDER,
 			formStyleSet: meet.MEET_STYLE_SET,
@@ -233,6 +239,10 @@ Page({
 				let node = {
 					'MEET_TITLE': data.title,
 					'MEET_TYPE_NAME': data.typeName,
+					'MEET_TEACHER': data.teacher,
+					'MEET_PLACE': data.place,
+					'MEET_AGE': data.age,
+					'MEET_CLASS': data.className,
 					'MEET_DAYS_SET': data.daysSet,
 					'MEET_FORM_SET': data.formSet,
 					'MEET_EDIT_TIME': timeHelper.time('Y-M-D h:m:s'),

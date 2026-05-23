@@ -1,0 +1,3 @@
+.text-pic-list-box .item .data-button {
+	margin-top: 16rpx;
+}
