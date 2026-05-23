@@ -6,6 +6,7 @@
 const BaseController = require('./base_controller.js');
 const ChildService = require('../service/child_service.js');
 const ChildModel = require('../model/child_model.js');
+const LeaveModel = require('../model/leave_model.js');
 const timeUtil = require('../../framework/utils/time_util.js');
 
 class MyController extends BaseController {
@@ -41,6 +42,42 @@ class MyController extends BaseController {
 		let input = this.validateData(rules);
 		let service = new ChildService();
 		await service.delChild(this._userId, input.id);
+	}
+
+	async applyLeave() {
+		let rules = {
+			joinId: 'must|id',
+			reason: 'string|max:200|name=请假原因',
+		};
+		let input = this.validateData(rules);
+		let service = new ChildService();
+		return await service.applyLeave(this._userId, input);
+	}
+
+	async getLeaveList() {
+		let rules = {
+			page: 'must|int|default=1',
+			size: 'int',
+			isTotal: 'bool',
+			oldTotal: 'int',
+		};
+		let input = this.validateData(rules);
+		let service = new ChildService();
+		let result = await service.getMyLeaveList(this._userId, input);
+		for (let k in result.list) {
+			result.list[k].LEAVE_STATUS_DESC = LeaveModel.getDesc('STATUS', result.list[k].LEAVE_STATUS);
+			result.list[k].LEAVE_ADD_TIME = timeUtil.timestamp2Time(result.list[k].LEAVE_ADD_TIME);
+		}
+		return result;
+	}
+
+	async cancelLeave() {
+		let rules = {
+			id: 'must|id',
+		};
+		let input = this.validateData(rules);
+		let service = new ChildService();
+		await service.cancelLeave(this._userId, input.id);
 	}
 
 }

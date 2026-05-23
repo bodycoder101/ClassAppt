@@ -13,6 +13,8 @@ module.exports = Behavior({
 		isLoad: false,
 
 		isShowHome: false,
+		leaveModalShow: false,
+		formReason: '',
 	},
 
 	methods: {
@@ -132,6 +134,35 @@ module.exports = Behavior({
 			}
 
 			pageHelper.showConfirm('确认取消该预约?', callback);
+		},
+
+		bindLeaveTap: function () {
+			this.setData({
+				leaveModalShow: true,
+				formReason: ''
+			});
+		},
+
+		bindLeaveCmpt: async function () {
+			try {
+				await cloudHelper.callCloudSumbit('my/leave_apply', {
+					joinId: this.data.id,
+					reason: this.data.formReason
+				}, {
+					title: '提交中'
+				});
+				this.setData({
+					leaveModalShow: false,
+					formReason: ''
+				});
+				pageHelper.showSuccToast('请假申请已提交');
+			} catch (err) {
+				console.log(err);
+			}
+		},
+
+		model: function (e) {
+			pageHelper.model(this, e);
 		},
 
 		url: function (e) {

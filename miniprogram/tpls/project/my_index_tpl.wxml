@@ -66,6 +66,12 @@
 						<text class="text-black">孩子档案</text>
 					</view>
 				</view>
+				<view class="item arrow" bindtap="url" data-url="../leave/my_leave">
+					<view class="content">
+						<text class="icon-remind my-icon-project text-blue"></text>
+						<text class="text-black">请假记录</text>
+					</view>
+				</view>
 				<view class="item arrow" bindtap="url" data-url="../edit/my_edit">
 					<view class="content">
 						<text class="icon-edit my-icon-project text-green"></text>

@@ -1,0 +1,29 @@
+<view wx:if="{{!isLoad}}" class="margin-top load loading text-l load-project"></view>
+
+<view wx:if="{{isLoad}}">
+	<cmpt-comm-list type="my_leave" route="my/leave_list" topBottom="120" placeholder="搜索" bind:list="bindCommListCmpt">
+		<view class="text-pic-list-box padding-project">
+			<view class="item card-project shadow-project" wx:for="{{dataList.list}}" wx:key="key">
+				<view class="title content-cut-two">{{item.LEAVE_MEET_TITLE}}</view>
+				<view class="author">
+					<text class="icon-time margin-right-xs text-s"></text>{{item.LEAVE_MEET_DAY}} {{item.LEAVE_MEET_TIME_START}}～{{item.LEAVE_MEET_TIME_END}}
+				</view>
+				<view class="data">
+					<text wx:if="{{item.LEAVE_STATUS==0}}" class="text-orange">待审核</text>
+					<text wx:elif="{{item.LEAVE_STATUS==1}}" class="text-green">已通过</text>
+					<text wx:elif="{{item.LEAVE_STATUS==8}}" class="text-orange">已拒绝</text>
+					<text wx:elif="{{item.LEAVE_STATUS==10}}" class="text-grey">已取消</text>
+					<text wx:if="{{item.LEAVE_CHILD_NAME}}" class="margin-left-s">孩子：{{item.LEAVE_CHILD_NAME}}</text>
+				</view>
+				<view class="data-desc content-cut-two" wx:if="{{item.LEAVE_REASON}}">原因：{{item.LEAVE_REASON}}</view>
+				<view class="data-desc content-cut-two" wx:if="{{item.LEAVE_ADMIN_REASON}}">处理备注：{{item.LEAVE_ADMIN_REASON}}</view>
+				<view class="data data-button">
+					<button wx:if="{{item.LEAVE_STATUS==0}}" bindtap="bindCancelTap" data-id="{{item._id}}" class="btn mid bg-grey light">取消申请</button>
+				</view>
+			</view>
+
+			<import src="../../../../tpls/public/list_load_tpl.wxml" />
+			<template is="listLoadTpl" data="{{skin:'load-project',dataList}}" />
+		</view>
+	</cmpt-comm-list>
+</view>

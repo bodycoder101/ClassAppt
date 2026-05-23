@@ -35,6 +35,7 @@
 					<view class="oprt" wx:if="{{join.JOIN_STATUS==0 || join.JOIN_STATUS==1}}">
 						<view bindtap="url" data-url="../../my/index/my_index" data-type="relaunch" wx:if="{{isShowHome}}" class="btn margin-right-s">返回首页</view> 
 						<view bindtap="bindCalendarTap" class="btn">加入手机日程</view>
+						<view bindtap="bindLeaveTap" wx:if="{{join.JOIN_IS_CHECKIN==0}}" class="btn margin-left-s">请假申请</view>
 					</view>
 
 				</view>
@@ -68,5 +69,12 @@
 				</view>
 			</view>
 		</view>
+
+		<cmpt-modal model:show="{{leaveModalShow}}" type="dialog" title="请假申请" bind:click="bindLeaveCmpt" class="modal-form" cancelText="返回" confirmText="提交">
+			<view class="form-group align-start">
+				<view class="title">原因</view>
+				<textarea placeholder="请输入请假原因" model:value="{{formReason}}" maxlength="200" style="height:140rpx"></textarea>
+			</view>
+		</cmpt-modal>
 	</block>
 </template>
