@@ -11,7 +11,18 @@ const pageHelper = require('../helper/page_helper.js');
 class MeetBiz extends BaseBiz {
 
 	static async subscribeMessageMeet(callback) {
-		callback && await callback();
+		let tmplIds = setting.MEET_SUBSCRIBE_TMPL_IDS || [];
+		if (!tmplIds.length) {
+			callback && await callback();
+			return;
+		}
+
+		wx.requestSubscribeMessage({
+			tmplIds,
+			complete: async () => {
+				callback && await callback();
+			}
+		});
 	}
 
 	static addMeetPhoneCalendar(title, startTime, endTime, alarmOffset = 3600) {
