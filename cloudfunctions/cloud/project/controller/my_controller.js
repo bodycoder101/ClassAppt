@@ -8,6 +8,9 @@ const ChildService = require('../service/child_service.js');
 const ChildModel = require('../model/child_model.js');
 const LeaveModel = require('../model/leave_model.js');
 const JoinModel = require('../model/join_model.js');
+const CoursePackageModel = require('../model/course_package_model.js');
+const CourseConsumeModel = require('../model/course_consume_model.js');
+const ContractModel = require('../model/contract_model.js');
 const timeUtil = require('../../framework/utils/time_util.js');
 
 class MyController extends BaseController {
@@ -62,6 +65,16 @@ class MyController extends BaseController {
 			result.leaveList[k].LEAVE_STATUS_DESC = LeaveModel.getDesc('STATUS', result.leaveList[k].LEAVE_STATUS);
 			result.leaveList[k].LEAVE_ADD_TIME = timeUtil.timestamp2Time(result.leaveList[k].LEAVE_ADD_TIME, 'Y-M-D h:m');
 			result.leaveList[k].LEAVE_MEET_DAY_DESC = timeUtil.fmtDateCHN(result.leaveList[k].LEAVE_MEET_DAY) + ' (' + timeUtil.week(result.leaveList[k].LEAVE_MEET_DAY) + ')';
+		}
+		for (let k in result.packageList) {
+			result.packageList[k].PACKAGE_STATUS_DESC = CoursePackageModel.getDesc('STATUS', result.packageList[k].PACKAGE_STATUS);
+		}
+		for (let k in result.consumeList) {
+			result.consumeList[k].CONSUME_STATUS_DESC = CourseConsumeModel.getDesc('STATUS', result.consumeList[k].CONSUME_STATUS);
+			result.consumeList[k].CONSUME_ADD_TIME = timeUtil.timestamp2Time(result.consumeList[k].CONSUME_ADD_TIME, 'Y-M-D h:m');
+		}
+		for (let k in result.contractList) {
+			result.contractList[k].CONTRACT_STATUS_DESC = ContractModel.getDesc('STATUS', result.contractList[k].CONTRACT_STATUS);
 		}
 
 		return result;

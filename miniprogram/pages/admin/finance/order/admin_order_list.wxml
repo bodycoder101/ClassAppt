@@ -1,0 +1,47 @@
+<view wx:if="{{isAdmin}}">
+	<cmpt-comm-list id="cmpt-comm-list" type="admin-order" _menus="{{sortMenus}}" route="admin/order_list" topBottom="50" placeholder="搜索家长/孩子/订单" bind:list="bindCommListCmpt">
+		<view slot="searchEnd">
+			<button bindtap="bindAddTap" class="btn mid radius bg-admin text-white margin-right-s">新增订单</button>
+		</view>
+
+		<view class="admin-comm-list">
+			<view wx:if="{{dataList && dataList.total}}" class="load text-grey">共有{{dataList.total}}条订单</view>
+			<view class="item" wx:for="{{dataList.list}}" wx:key="_id">
+				<view class="header">
+					<view class="left text-cut">{{item.ORDER_TITLE}}</view>
+					<view class="right">{{item.ORDER_AMOUNT/100}}元</view>
+				</view>
+				<view class="info">
+					<view class="info-item"><view class="title">家长</view><view class="mao">：</view><view class="content">{{item.ORDER_USER_NAME||item.ORDER_USER_ID}}</view></view>
+					<view class="info-item"><view class="title">孩子</view><view class="mao">：</view><view class="content">{{item.ORDER_CHILD_NAME||'未指定'}}</view></view>
+					<view class="info-item"><view class="title">课程包</view><view class="mao">：</view><view class="content">{{item.ORDER_PACKAGE_NAME||'无'}}</view></view>
+					<view class="info-item"><view class="title">状态</view><view class="mao">：</view><view class="content">{{item.ORDER_PAY_STATUS_DESC}}</view></view>
+					<view class="info-item"><view class="title">时间</view><view class="mao">：</view><view class="content">{{item.ORDER_ADD_TIME}}</view></view>
+					<view class="oprt">
+						<view wx:if="{{item.ORDER_PAY_STATUS==1}}" bindtap="bindRefundTap" data-id="{{item._id}}" class="btn margin-right-s">退款</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<import src="../../../../tpls/public/list_load_tpl.wxml" />
+		<template is="listLoadTpl" data="{{skin:'text-grey',dataList}}" />
+	</cmpt-comm-list>
+
+	<cmpt-modal model:show="{{formShow}}" type="dialog" title="新增订单" bind:click="bindSaveCmpt" class="modal-form" cancelText="返回" confirmText="保存">
+		<view class="form-group"><view class="title must">OpenID</view><input placeholder="家长openid" model:value="{{formUserId}}"></input></view>
+		<view class="form-group"><view class="title">家长</view><input placeholder="家长姓名" model:value="{{formUserName}}"></input></view>
+		<view class="form-group"><view class="title">孩子ID</view><input placeholder="可选" model:value="{{formChildId}}"></input></view>
+		<view class="form-group"><view class="title">孩子</view><input placeholder="孩子姓名" model:value="{{formChildName}}"></input></view>
+		<view class="form-group"><view class="title must">标题</view><input placeholder="订单标题" model:value="{{formTitle}}"></input></view>
+		<view class="form-group"><view class="title must">金额</view><input type="digit" placeholder="元" model:value="{{formAmount}}"></input></view>
+		<view class="form-group"><view class="title">课程包</view><input placeholder="如：20次课程包" model:value="{{formPackageName}}"></input></view>
+		<view class="form-group"><view class="title">课次</view><input type="number" placeholder="总课次" model:value="{{formTotalTimes}}"></input></view>
+		<view class="form-group"><view class="title">开始</view><input placeholder="2026-06-01" model:value="{{formStartDay}}"></input></view>
+		<view class="form-group"><view class="title">结束</view><input placeholder="2026-12-31" model:value="{{formEndDay}}"></input></view>
+		<view class="form-group align-start"><view class="title">备注</view><textarea model:value="{{formMemo}}" maxlength="200" style="height:100rpx"></textarea></view>
+	</cmpt-modal>
+
+	<cmpt-modal model:show="{{refundShow}}" type="dialog" title="退款" bind:click="bindRefundCmpt" class="modal-form" cancelText="返回" confirmText="确认退款">
+		<view class="form-group align-start"><view class="title">原因</view><textarea model:value="{{formRefundReason}}" maxlength="100" style="height:100rpx"></textarea></view>
+	</cmpt-modal>
+</view>

@@ -1,0 +1,22 @@
+<view wx:if="{{isAdmin}}">
+	<cmpt-comm-list type="admin-package" route="admin/package_list" topBottom="50" placeholder="搜索家长/孩子/课程包" bind:list="bindCommListCmpt">
+		<view class="admin-comm-list">
+			<view wx:if="{{dataList && dataList.total}}" class="load text-grey">共有{{dataList.total}}个课程包</view>
+			<view class="item" wx:for="{{dataList.list}}" wx:key="_id">
+				<view class="header">
+					<view class="left text-cut">{{item.PACKAGE_NAME}}</view>
+					<view class="right">{{item.PACKAGE_STATUS_DESC}}</view>
+				</view>
+				<view class="info">
+					<view class="info-item"><view class="title">家长</view><view class="mao">：</view><view class="content">{{item.PACKAGE_USER_NAME||item.PACKAGE_USER_ID}}</view></view>
+					<view class="info-item"><view class="title">孩子</view><view class="mao">：</view><view class="content">{{item.PACKAGE_CHILD_NAME||'未指定'}}</view></view>
+					<view class="info-item"><view class="title">课次</view><view class="mao">：</view><view class="content">{{item.PACKAGE_LEFT_TIMES}}/{{item.PACKAGE_TOTAL_TIMES}}</view></view>
+					<view class="info-item"><view class="title">金额</view><view class="mao">：</view><view class="content">{{item.PACKAGE_AMOUNT/100}}元</view></view>
+					<view class="info-item"><view class="title">有效期</view><view class="mao">：</view><view class="content">{{item.PACKAGE_START_DAY||'-'}} 至 {{item.PACKAGE_END_DAY||'-'}}</view></view>
+				</view>
+			</view>
+		</view>
+		<import src="../../../../tpls/public/list_load_tpl.wxml" />
+		<template is="listLoadTpl" data="{{skin:'text-grey',dataList}}" />
+	</cmpt-comm-list>
+</view>

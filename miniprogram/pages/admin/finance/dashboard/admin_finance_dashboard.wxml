@@ -1,0 +1,45 @@
+<view wx:if="{{!isLoad}}" class="margin-top load loading text-l text-admin"></view>
+
+<view wx:if="{{isLoad && isAdmin}}" class="finance-page">
+	<view class="stats grid col-2">
+		<view class="stat bg-white">
+			<view class="num">{{data.netAmount/100}}</view>
+			<view class="label">净收入(元)</view>
+		</view>
+		<view class="stat bg-white">
+			<view class="num">{{data.consumeCnt}}</view>
+			<view class="label">课消次数</view>
+		</view>
+		<view class="stat bg-white">
+			<view class="num">{{data.attendanceRate}}%</view>
+			<view class="label">出勤率</view>
+		</view>
+		<view class="stat bg-white">
+			<view class="num">{{data.bookingCnt}}</view>
+			<view class="label">预约数</view>
+		</view>
+	</view>
+
+	<view class="comm-list grid col-4 margin-top-s">
+		<view class="item" bindtap="url" data-url="../order/admin_order_list">订单</view>
+		<view class="item" bindtap="url" data-url="../package/admin_package_list">课程包</view>
+		<view class="item" bindtap="url" data-url="../consume/admin_consume_list">课消</view>
+		<view class="item" bindtap="url" data-url="../contract/admin_contract_list">合同</view>
+	</view>
+
+	<view class="panel bg-white">
+		<view class="panel-title">热门课程</view>
+		<view wx:for="{{data.meetTop}}" wx:key="meetId" class="rank">
+			<view class="name content-cut-one">{{index+1}}. {{item.title}}</view>
+			<view class="cnt">{{item.bookingCnt}}约 / {{item.checkinCnt}}到</view>
+		</view>
+	</view>
+
+	<view class="panel bg-white">
+		<view class="panel-title">教师工作量</view>
+		<view wx:for="{{data.teacherTop}}" wx:key="teacher" class="rank">
+			<view class="name content-cut-one">{{index+1}}. {{item.teacher}}</view>
+			<view class="cnt">{{item.bookingCnt}}约 / {{item.checkinCnt}}到</view>
+		</view>
+	</view>
+</view>

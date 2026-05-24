@@ -1,0 +1,41 @@
+<view wx:if="{{isAdmin}}">
+	<cmpt-comm-list id="cmpt-comm-list" type="admin-contract" route="admin/contract_list" topBottom="50" placeholder="搜索家长/孩子/合同" bind:list="bindCommListCmpt">
+		<view slot="searchEnd">
+			<button bindtap="bindAddTap" class="btn mid radius bg-admin text-white margin-right-s">新增合同</button>
+		</view>
+		<view class="admin-comm-list">
+			<view wx:if="{{dataList && dataList.total}}" class="load text-grey">共有{{dataList.total}}条合同记录</view>
+			<view class="item" wx:for="{{dataList.list}}" wx:key="_id">
+				<view class="header">
+					<view class="left text-cut">{{item.CONTRACT_TITLE}}</view>
+					<view class="right">{{item.CONTRACT_STATUS_DESC}}</view>
+				</view>
+				<view class="info">
+					<view class="info-item"><view class="title">编号</view><view class="mao">：</view><view class="content">{{item.CONTRACT_NO||'未填写'}}</view></view>
+					<view class="info-item"><view class="title">家长</view><view class="mao">：</view><view class="content">{{item.CONTRACT_USER_NAME||item.CONTRACT_USER_ID}}</view></view>
+					<view class="info-item"><view class="title">孩子</view><view class="mao">：</view><view class="content">{{item.CONTRACT_CHILD_NAME||'未指定'}}</view></view>
+					<view class="info-item"><view class="title">签署</view><view class="mao">：</view><view class="content">{{item.CONTRACT_SIGN_DAY||'-'}} 至 {{item.CONTRACT_EXPIRE_DAY||'-'}}</view></view>
+					<view class="info-item" wx:if="{{item.CONTRACT_URL}}"><view class="title">链接</view><view class="mao">：</view><view class="content" bindtap="url" data-type="copy" data-url="{{item.CONTRACT_URL}}">{{item.CONTRACT_URL}}</view></view>
+					<view class="oprt">
+						<view wx:if="{{item.CONTRACT_STATUS==1}}" bindtap="bindDelTap" data-id="{{item._id}}" class="btn margin-right-s">作废</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<import src="../../../../tpls/public/list_load_tpl.wxml" />
+		<template is="listLoadTpl" data="{{skin:'text-grey',dataList}}" />
+	</cmpt-comm-list>
+
+	<cmpt-modal model:show="{{formShow}}" type="dialog" title="合同记录" bind:click="bindSaveCmpt" class="modal-form" cancelText="返回" confirmText="保存">
+		<view class="form-group"><view class="title must">OpenID</view><input placeholder="家长openid" model:value="{{formUserId}}"></input></view>
+		<view class="form-group"><view class="title">家长</view><input placeholder="家长姓名" model:value="{{formUserName}}"></input></view>
+		<view class="form-group"><view class="title">孩子ID</view><input placeholder="可选" model:value="{{formChildId}}"></input></view>
+		<view class="form-group"><view class="title">孩子</view><input placeholder="孩子姓名" model:value="{{formChildName}}"></input></view>
+		<view class="form-group"><view class="title must">名称</view><input placeholder="合同名称" model:value="{{formTitle}}"></input></view>
+		<view class="form-group"><view class="title">编号</view><input placeholder="合同编号" model:value="{{formNo}}"></input></view>
+		<view class="form-group"><view class="title">链接</view><input placeholder="合同链接或云文件ID" model:value="{{formUrl}}"></input></view>
+		<view class="form-group"><view class="title">签署</view><input placeholder="2026-06-01" model:value="{{formSignDay}}"></input></view>
+		<view class="form-group"><view class="title">到期</view><input placeholder="2027-06-01" model:value="{{formExpireDay}}"></input></view>
+		<view class="form-group align-start"><view class="title">备注</view><textarea model:value="{{formMemo}}" maxlength="200" style="height:100rpx"></textarea></view>
+	</cmpt-modal>
+</view>

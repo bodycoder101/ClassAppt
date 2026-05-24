@@ -1,0 +1,21 @@
+<view wx:if="{{isAdmin}}">
+	<cmpt-comm-list type="admin-consume" route="admin/consume_list" topBottom="50" placeholder="搜索孩子/课程" bind:list="bindCommListCmpt">
+		<view class="admin-comm-list">
+			<view wx:if="{{dataList && dataList.total}}" class="load text-grey">共有{{dataList.total}}条课消记录</view>
+			<view class="item" wx:for="{{dataList.list}}" wx:key="_id">
+				<view class="header">
+					<view class="left text-cut">{{item.CONSUME_MEET_TITLE}}</view>
+					<view class="right">{{item.CONSUME_STATUS_DESC}}</view>
+				</view>
+				<view class="info">
+					<view class="info-item"><view class="title">孩子</view><view class="mao">：</view><view class="content">{{item.CONSUME_CHILD_NAME||'未填写'}}</view></view>
+					<view class="info-item"><view class="title">时间</view><view class="mao">：</view><view class="content">{{item.CONSUME_MEET_DAY}} {{item.CONSUME_MEET_TIME_START}}～{{item.CONSUME_MEET_TIME_END}}</view></view>
+					<view class="info-item"><view class="title">课次</view><view class="mao">：</view><view class="content">{{item.CONSUME_TIMES}}</view></view>
+					<view class="info-item"><view class="title">记录</view><view class="mao">：</view><view class="content">{{item.CONSUME_ADD_TIME}}</view></view>
+				</view>
+			</view>
+		</view>
+		<import src="../../../../tpls/public/list_load_tpl.wxml" />
+		<template is="listLoadTpl" data="{{skin:'text-grey',dataList}}" />
+	</cmpt-comm-list>
+</view>

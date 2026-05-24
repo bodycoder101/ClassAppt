@@ -18,6 +18,8 @@ const UserModel = require('../../model/user_model.js');
 const MeetModel = require('../../model/meet_model.js');
 const NewsModel = require('../../model/news_model.js');
 const JoinModel = require('../../model/join_model.js');
+const OrderModel = require('../../model/order_model.js');
+const CourseConsumeModel = require('../../model/course_consume_model.js');
 
 class AdminHomeService extends BaseAdminService {
 
@@ -31,11 +33,15 @@ class AdminHomeService extends BaseAdminService {
 		let meetCnt = await MeetModel.count(where);
 		let newsCnt = await NewsModel.count(where);
 		let joinCnt = await JoinModel.count(where);
+		let orderCnt = await OrderModel.count(where);
+		let consumeCnt = await CourseConsumeModel.count(where);
 		return {
 			userCnt,
 			meetCnt,
 			newsCnt,
-			joinCnt
+			joinCnt,
+			orderCnt,
+			consumeCnt
 		}
 	}
 

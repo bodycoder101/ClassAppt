@@ -44,4 +44,28 @@
 		<view wx:if="{{item.LEAVE_REASON}}" class="text-grey content-cut-two">原因：{{item.LEAVE_REASON}}</view>
 		<view wx:if="{{item.LEAVE_ADMIN_REASON}}" class="text-grey content-cut-two">处理备注：{{item.LEAVE_ADMIN_REASON}}</view>
 	</view>
+
+	<view class="section-title margin-top-l">课程包</view>
+	<view wx:if="{{!packageList.length}}" class="load notexist text-grey">暂无课程包</view>
+	<view class="record card-project shadow-project" wx:for="{{packageList}}" wx:key="_id">
+		<view class="record-title content-cut-two">{{item.PACKAGE_NAME}}</view>
+		<view class="record-time text-grey">剩余 {{item.PACKAGE_LEFT_TIMES}} / {{item.PACKAGE_TOTAL_TIMES}} 次</view>
+		<view class="record-status">{{item.PACKAGE_STATUS_DESC}}<text class="text-grey margin-left-s">{{item.PACKAGE_START_DAY||'-'}} 至 {{item.PACKAGE_END_DAY||'-'}}</text></view>
+	</view>
+
+	<view class="section-title margin-top-l">课消记录</view>
+	<view wx:if="{{!consumeList.length}}" class="load notexist text-grey">暂无课消记录</view>
+	<view class="record card-project shadow-project" wx:for="{{consumeList}}" wx:key="_id">
+		<view class="record-title content-cut-two">{{item.CONSUME_MEET_TITLE}}</view>
+		<view class="record-time text-grey">{{item.CONSUME_MEET_DAY}} {{item.CONSUME_MEET_TIME_START}}～{{item.CONSUME_MEET_TIME_END}}</view>
+		<view class="record-status">{{item.CONSUME_STATUS_DESC}}<text class="text-grey margin-left-s">{{item.CONSUME_ADD_TIME}}</text></view>
+	</view>
+
+	<view class="section-title margin-top-l">合同记录</view>
+	<view wx:if="{{!contractList.length}}" class="load notexist text-grey">暂无合同记录</view>
+	<view class="record card-project shadow-project" wx:for="{{contractList}}" wx:key="_id">
+		<view class="record-title content-cut-two">{{item.CONTRACT_TITLE}}</view>
+		<view class="record-time text-grey">编号：{{item.CONTRACT_NO||'未填写'}}</view>
+		<view class="record-status">{{item.CONTRACT_STATUS_DESC}}<text class="text-grey margin-left-s">{{item.CONTRACT_SIGN_DAY||'-'}} 至 {{item.CONTRACT_EXPIRE_DAY||'-'}}</text></view>
+	</view>
 </view>
