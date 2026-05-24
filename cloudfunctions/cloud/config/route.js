@@ -94,6 +94,7 @@ module.exports = {
 	'admin/user_data_export': 'admin/admin_export_controller@userDataExport',
 	'admin/user_data_del': 'admin/admin_export_controller@userDataDel#noDemo',
 
+	'admin/teacher_today': 'admin/admin_daycare_controller@getTeacherToday',
 	'admin/leave_list': 'admin/admin_daycare_controller@getLeaveList',
 	'admin/leave_status': 'admin/admin_daycare_controller@statusLeave#noDemo',
 

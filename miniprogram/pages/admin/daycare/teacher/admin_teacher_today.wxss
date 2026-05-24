@@ -1,0 +1,88 @@
+.teacher-page {
+	padding: 24rpx;
+}
+
+.date-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20rpx;
+	border-radius: 8rpx;
+}
+
+.date-main {
+	text-align: center;
+}
+
+.date-main .date {
+	font-size: 34rpx;
+	font-weight: bold;
+}
+
+.tools {
+	margin: 24rpx 0;
+	display: flex;
+}
+
+.schedule {
+	margin-bottom: 24rpx;
+	padding: 24rpx;
+	background: #fff;
+}
+
+.schedule-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 14rpx;
+}
+
+.schedule-head .time {
+	font-size: 34rpx;
+	font-weight: bold;
+	color: #2499f2;
+}
+
+.schedule-head .cnt {
+	color: #666;
+}
+
+.schedule .title {
+	font-size: 32rpx;
+	font-weight: bold;
+	margin-bottom: 10rpx;
+}
+
+.schedule .meta {
+	color: #666;
+	margin-bottom: 16rpx;
+}
+
+.empty-student {
+	padding: 24rpx 0;
+	text-align: center;
+}
+
+.student {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20rpx 0;
+	border-top: 1rpx solid #eee;
+}
+
+.student-main {
+	flex: 1;
+	min-width: 0;
+	padding-right: 20rpx;
+}
+
+.student-main .name {
+	font-size: 30rpx;
+	font-weight: bold;
+	margin-bottom: 8rpx;
+}
+
+.student-main .form {
+	font-size: 24rpx;
+}
