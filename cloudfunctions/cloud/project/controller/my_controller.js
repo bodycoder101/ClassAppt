@@ -7,6 +7,7 @@ const BaseController = require('./base_controller.js');
 const ChildService = require('../service/child_service.js');
 const ChildModel = require('../model/child_model.js');
 const LeaveModel = require('../model/leave_model.js');
+const JoinModel = require('../model/join_model.js');
 const timeUtil = require('../../framework/utils/time_util.js');
 
 class MyController extends BaseController {
@@ -42,6 +43,28 @@ class MyController extends BaseController {
 		let input = this.validateData(rules);
 		let service = new ChildService();
 		await service.delChild(this._userId, input.id);
+	}
+
+	async getChildRecord() {
+		let rules = {
+			id: 'must|id',
+		};
+		let input = this.validateData(rules);
+		let service = new ChildService();
+		let result = await service.getChildRecord(this._userId, input.id);
+
+		for (let k in result.joinList) {
+			result.joinList[k].JOIN_STATUS_DESC = JoinModel.getDesc('STATUS', result.joinList[k].JOIN_STATUS);
+			result.joinList[k].JOIN_ADD_TIME = timeUtil.timestamp2Time(result.joinList[k].JOIN_ADD_TIME, 'Y-M-D h:m');
+			result.joinList[k].JOIN_MEET_DAY_DESC = timeUtil.fmtDateCHN(result.joinList[k].JOIN_MEET_DAY) + ' (' + timeUtil.week(result.joinList[k].JOIN_MEET_DAY) + ')';
+		}
+		for (let k in result.leaveList) {
+			result.leaveList[k].LEAVE_STATUS_DESC = LeaveModel.getDesc('STATUS', result.leaveList[k].LEAVE_STATUS);
+			result.leaveList[k].LEAVE_ADD_TIME = timeUtil.timestamp2Time(result.leaveList[k].LEAVE_ADD_TIME, 'Y-M-D h:m');
+			result.leaveList[k].LEAVE_MEET_DAY_DESC = timeUtil.fmtDateCHN(result.leaveList[k].LEAVE_MEET_DAY) + ' (' + timeUtil.week(result.leaveList[k].LEAVE_MEET_DAY) + ')';
+		}
+
+		return result;
 	}
 
 	async applyLeave() {

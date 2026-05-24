@@ -20,6 +20,7 @@
 					</view>
 				</view>
 			</view>
+			<view catchtap="bindRecordTap" data-id="{{item._id}}" class="text-project margin-right-s"><text class="icon-calendar"></text>记录</view>
 			<view catchtap="bindDelTap" data-id="{{item._id}}" class="text-grey"><text class="icon-delete"></text></view>
 		</view>
 	</view>

@@ -71,6 +71,40 @@ class ChildService extends BaseService {
 		});
 	}
 
+	async getChildRecord(userId, childId) {
+		let child = await ChildModel.getOne({
+			_id: childId,
+			CHILD_USER_ID: userId,
+			CHILD_STATUS: ChildModel.STATUS.COMM
+		});
+		if (!child) this.AppError('孩子档案不存在');
+
+		let joinList = await JoinModel.getAllBig({
+			JOIN_USER_ID: userId
+		}, 'JOIN_IS_CHECKIN,JOIN_REASON,JOIN_MEET_ID,JOIN_MEET_TITLE,JOIN_MEET_DAY,JOIN_MEET_TIME_START,JOIN_MEET_TIME_END,JOIN_STATUS,JOIN_ADD_TIME,JOIN_FORMS', {
+			JOIN_MEET_DAY: 'desc',
+			JOIN_MEET_TIME_START: 'desc',
+			JOIN_ADD_TIME: 'desc'
+		}, 1000);
+		joinList = joinList.filter(item => {
+			let childInfo = this._getChildInfo(item.JOIN_FORMS || []);
+			return childInfo.id == childId || (!childInfo.id && childInfo.name == child.CHILD_NAME);
+		});
+
+		let leaveList = await LeaveModel.getAllBig({
+			LEAVE_USER_ID: userId,
+			LEAVE_CHILD_ID: childId
+		}, '*', {
+			LEAVE_ADD_TIME: 'desc'
+		}, 1000);
+
+		return {
+			child,
+			joinList,
+			leaveList
+		};
+	}
+
 	async applyLeave(userId, {
 		joinId,
 		reason = ''

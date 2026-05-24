@@ -31,6 +31,7 @@ module.exports = {
 	'my/child_list': 'my_controller@getChildList',
 	'my/child_save': 'my_controller@saveChild',
 	'my/child_del': 'my_controller@delChild',
+	'my/child_record': 'my_controller@getChildRecord',
 	'my/leave_apply': 'my_controller@applyLeave',
 	'my/leave_list': 'my_controller@getLeaveList',
 	'my/leave_cancel': 'my_controller@cancelLeave',

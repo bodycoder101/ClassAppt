@@ -1,0 +1,42 @@
+.child-record .profile {
+	background: #fff;
+	padding: 28rpx;
+	margin-bottom: 28rpx;
+}
+
+.child-record .profile .name {
+	font-size: 36rpx;
+	font-weight: bold;
+	margin-bottom: 8rpx;
+}
+
+.child-record .profile .memo {
+	margin-top: 14rpx;
+	line-height: 1.6;
+}
+
+.section-title {
+	font-size: 32rpx;
+	font-weight: bold;
+	margin: 16rpx 0;
+}
+
+.record {
+	background: #fff;
+	padding: 24rpx;
+	margin-bottom: 18rpx;
+}
+
+.record-title {
+	font-size: 30rpx;
+	font-weight: bold;
+	margin-bottom: 10rpx;
+}
+
+.record-time {
+	margin-bottom: 10rpx;
+}
+
+.record-status {
+	margin-bottom: 8rpx;
+}

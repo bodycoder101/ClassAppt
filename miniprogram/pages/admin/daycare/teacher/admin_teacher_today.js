@@ -79,15 +79,16 @@ Page({
 			isLoad: false
 		});
 		try {
-			let res = await cloudHelper.callCloudData('admin/teacher_today', {
+			let data = await cloudHelper.callCloudData('admin/teacher_today', {
 				day: this.data.day
 			}, {
 				title: 'bar'
 			});
+			data = data || {};
 			this.setData({
 				isLoad: true,
-				week: res.data.week,
-				list: res.data.list || []
+				week: data.week,
+				list: data.list || []
 			});
 		} catch (err) {
 			console.error(err);
