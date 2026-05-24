@@ -47,6 +47,17 @@ class AdminDaycareController extends BaseAdminController {
 		return result;
 	}
 
+	async sendCourseRemind() {
+		await this.isAdmin();
+		let rules = {
+			meetId: 'must|id',
+			timeMark: 'must|string',
+		};
+		let input = this.validateData(rules);
+		let service = new AdminDaycareService();
+		return await service.sendCourseRemind(input.meetId, input.timeMark);
+	}
+
 	async statusLeave() {
 		await this.isAdmin();
 		let rules = {

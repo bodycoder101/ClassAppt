@@ -10,6 +10,7 @@ const JoinModel = require('../../model/join_model.js');
 const MeetModel = require('../../model/meet_model.js');
 const DayModel = require('../../model/day_model.js');
 const MeetService = require('../meet_service.js');
+const NotifyService = require('../notify_service.js');
 
 class AdminDaycareService extends BaseAdminService {
 
@@ -120,6 +121,20 @@ class AdminDaycareService extends BaseAdminService {
 		return await LeaveModel.getList(where, fields, orderBy, page, size, isTotal, oldTotal);
 	}
 
+	async sendCourseRemind(meetId, timeMark) {
+		let joinList = await JoinModel.getAllBig({
+			JOIN_MEET_ID: meetId,
+			JOIN_MEET_TIME_MARK: timeMark,
+			JOIN_STATUS: JoinModel.STATUS.SUCC,
+			JOIN_IS_CHECKIN: 0
+		}, '*', {}, 1000);
+		let sent = await NotifyService.sendCourseRemindBatch(joinList);
+		return {
+			total: joinList.length,
+			sent
+		};
+	}
+
 	async statusLeave(admin, id, status, reason = '') {
 		status = Number(status);
 		let leave = await LeaveModel.getOne({
@@ -149,6 +164,7 @@ class AdminDaycareService extends BaseAdminService {
 			let meetService = new MeetService();
 			await meetService.statJoinCnt(leave.LEAVE_MEET_ID, leave.LEAVE_MEET_TIME_MARK);
 		}
+		await NotifyService.sendLeaveResult(Object.assign({}, leave, data), LeaveModel.getDesc('STATUS', status));
 	}
 
 	_getChildInfo(forms) {

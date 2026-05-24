@@ -9,6 +9,7 @@ const util = require('../../framework/utils/util.js');
 const MeetModel = require('../model/meet_model.js');
 const JoinModel = require('../model/join_model.js');
 const DayModel = require('../model/day_model.js');
+const NotifyService = require('./notify_service.js');
 const LogUtil = require('../../framework/utils/log_util.js');
 const timeUtil = require('../../framework/utils/time_util.js');
 const dataUtil = require('../../framework/utils/data_util.js');
@@ -179,6 +180,8 @@ class MeetService extends BaseService {
 
 		// 统计
 		await this.statJoinCnt(meetId, timeMark);
+		data._id = joinId;
+		await NotifyService.sendJoinSuccess(data);
 
 		return {
 			result: 'ok',

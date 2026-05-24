@@ -34,6 +34,12 @@ module.exports = {
 
 	// #### 预约相关
 	MEET_LOG_LEVEL: 'debug',
+	MINI_SUBSCRIBE_TEMPLATES: {
+		JOIN_SUCCESS: '',
+		JOIN_CHANGE: '',
+		LEAVE_RESULT: '',
+		COURSE_REMIND: ''
+	},
 
 	// ### 后台业务相关
 	ADMIN_LOGIN_EXPIRE: 86400, //管理员token过期时间 (秒) 

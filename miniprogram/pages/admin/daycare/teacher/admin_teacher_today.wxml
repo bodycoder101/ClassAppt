@@ -29,6 +29,9 @@
 				<text wx:if="{{item.place}}" class="margin-right-s">地点：{{item.place}}</text>
 				<text wx:if="{{item.className}}">班级：{{item.className}}</text>
 			</view>
+			<view class="schedule-op">
+				<button bindtap="bindRemindTap" data-idx="{{scheduleIndex}}" class="btn sm bg-blue light">发送提醒</button>
+			</view>
 
 			<view wx:if="{{!item.students.length}}" class="empty-student text-grey">暂无预约学生</view>
 			<view class="student" wx:for="{{item.students}}" wx:key="_id" wx:for-item="student" wx:for-index="studentIndex">

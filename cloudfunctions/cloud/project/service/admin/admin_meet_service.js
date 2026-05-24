@@ -15,6 +15,7 @@ const cloudBase = require('../../../framework/cloud/cloud_base.js');
 const MeetModel = require('../../model/meet_model.js');
 const JoinModel = require('../../model/join_model.js');
 const DayModel = require('../../model/day_model.js');
+const NotifyService = require('../notify_service.js');
 const config = require('../../../config/config.js');
 
 class AdminMeetService extends BaseAdminService {
@@ -134,11 +135,15 @@ class AdminMeetService extends BaseAdminService {
 			JOIN_MEET_TIME_MARK: timeMark,
 			JOIN_STATUS: ['in', [JoinModel.STATUS.WAIT, JoinModel.STATUS.SUCC]]
 		};
+		let joinList = await JoinModel.getAllBig(where, '*', {}, 1000);
 		let data = this._getAdminJoinEditData(admin, JoinModel.STATUS.ADMIN_CANCEL, reason);
 		data.JOIN_STATUS = JoinModel.STATUS.ADMIN_CANCEL;
 		data.JOIN_IS_CHECKIN = 0;
 
 		await JoinModel.edit(where, data);
+		for (let k in joinList) {
+			await NotifyService.sendJoinChange(Object.assign({}, joinList[k], data), '课程时段已取消');
+		}
 		return await this._statJoinCnt(meetId, timeMark);
 	}
 
@@ -449,7 +454,7 @@ class AdminMeetService extends BaseAdminService {
 	 */
 	async statusJoin(admin, joinId, status, reason = '') {
 		status = Number(status);
-		let join = await JoinModel.getOne(joinId, 'JOIN_STATUS,JOIN_MEET_ID,JOIN_MEET_TIME_MARK,JOIN_IS_CHECKIN');
+		let join = await JoinModel.getOne(joinId, '*');
 		if (!join) this.AppError('预约记录不存在');
 
 		if (status == JoinModel.STATUS.SUCC && join.JOIN_STATUS != JoinModel.STATUS.SUCC && join.JOIN_STATUS != JoinModel.STATUS.WAIT) {
@@ -467,6 +472,7 @@ class AdminMeetService extends BaseAdminService {
 		if (status != JoinModel.STATUS.SUCC) data.JOIN_IS_CHECKIN = 0;
 
 		await JoinModel.edit(joinId, data);
+		await NotifyService.sendJoinChange(Object.assign({}, join, data), JoinModel.getDesc('STATUS', status));
 		return await this._statJoinCnt(join.JOIN_MEET_ID, join.JOIN_MEET_TIME_MARK);
 	}
 

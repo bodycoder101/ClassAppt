@@ -47,6 +47,25 @@ Page({
 		this._loadData();
 	},
 
+	bindRemindTap: function (e) {
+		let idx = Number(pageHelper.dataset(e, 'idx'));
+		let item = this.data.list[idx];
+		let callback = async () => {
+			try {
+				let data = await cloudHelper.callCloudSumbit('admin/course_remind', {
+					meetId: item.meetId,
+					timeMark: item.timeMark
+				}, {
+					title: '发送中'
+				});
+				pageHelper.showSuccToast('已发送' + ((data && data.data && data.data.sent) || 0) + '条');
+			} catch (err) {
+				console.error(err);
+			}
+		};
+		pageHelper.showConfirm('确认发送开课提醒？', callback);
+	},
+
 	bindCheckinTap: function (e) {
 		let scheduleIdx = Number(pageHelper.dataset(e, 'scheduleidx'));
 		let studentIdx = Number(pageHelper.dataset(e, 'studentidx'));
