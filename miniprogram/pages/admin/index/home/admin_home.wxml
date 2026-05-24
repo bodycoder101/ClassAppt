@@ -37,6 +37,8 @@
 		</view>
 		<view class="item" bindtap="url" data-url="../../daycare/teacher/admin_teacher_today"> <text class="icon-calendar text-purple"></text> <text class="text-black">教师课表</text>
 		</view>
+		<view class="item" bindtap="url" data-url="../../daycare/child/admin_child_list"> <text class="icon-peoplefill text-cyan"></text> <text class="text-black">孩子档案</text>
+		</view>
 		<view class="item" bindtap="url" data-url="../../daycare/leave/admin_leave_list"> <text class="icon-remind text-orange"></text> <text class="text-black">请假审批</text>
 		</view>
 		<view class="item" bindtap="url" data-url="../../finance/dashboard/admin_finance_dashboard"> <text class="icon-rank text-blue"></text> <text class="text-black">运营统计</text>

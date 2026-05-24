@@ -9,10 +9,77 @@ const LeaveModel = require('../../model/leave_model.js');
 const JoinModel = require('../../model/join_model.js');
 const MeetModel = require('../../model/meet_model.js');
 const DayModel = require('../../model/day_model.js');
+const ChildModel = require('../../model/child_model.js');
 const MeetService = require('../meet_service.js');
 const NotifyService = require('../notify_service.js');
 
 class AdminDaycareService extends BaseAdminService {
+
+	async getChildList({
+		search,
+		page,
+		size,
+		isTotal = true,
+		oldTotal = 0
+	}) {
+		let where = {
+			and: {
+				CHILD_STATUS: ChildModel.STATUS.COMM
+			}
+		};
+		if (search) {
+			where.or = [{
+				CHILD_NAME: ['like', search]
+			}, {
+				CHILD_CLASS: ['like', search]
+			}, {
+				'CHILD_GUARDIANS.mobile': ['like', search]
+			}, {
+				'CHILD_GUARDIANS.name': ['like', search]
+			}];
+		}
+		return await ChildModel.getList(where, '*', {
+			CHILD_ADD_TIME: 'desc'
+		}, page, size, isTotal, oldTotal);
+	}
+
+	async saveChild({
+		id = '',
+		name,
+		sex = '',
+		birthday = '',
+		className = '',
+		memo = '',
+		guardians = []
+	}) {
+		guardians = this._normalizeGuardians(guardians);
+		if (!guardians.length) this.AppError('请至少绑定一个监护人OpenID或手机号');
+		let data = {
+			CHILD_USER_ID: guardians[0].openid || guardians[0].mobile,
+			CHILD_GUARDIANS: guardians,
+			CHILD_NAME: name,
+			CHILD_SEX: sex,
+			CHILD_BIRTHDAY: birthday,
+			CHILD_CLASS: className,
+			CHILD_MEMO: memo,
+			CHILD_STATUS: ChildModel.STATUS.COMM
+		};
+		if (id) {
+			await ChildModel.edit(id, data);
+			return {
+				id
+			};
+		}
+		return {
+			id: await ChildModel.insert(data)
+		};
+	}
+
+	async delChild(id) {
+		await ChildModel.edit(id, {
+			CHILD_STATUS: ChildModel.STATUS.DEL
+		});
+	}
 
 	async getTeacherToday(day, teacher = '') {
 		day = day || timeUtil.time('Y-M-D');
@@ -175,6 +242,27 @@ class AdminDaycareService extends BaseAdminService {
 		for (let k in forms) {
 			if (forms[k].mark == 'CHILD_ID') ret.id = forms[k].val || '';
 			if (forms[k].mark == 'CHILD_NAME' || forms[k].title == '孩子姓名') ret.name = forms[k].val || '';
+		}
+		return ret;
+	}
+
+	_normalizeGuardians(guardians = []) {
+		let ret = [];
+		let exists = {};
+		for (let k in guardians) {
+			let item = guardians[k] || {};
+			let openid = String(item.openid || '').trim();
+			let mobile = String(item.mobile || '').trim();
+			if (!openid && !mobile) continue;
+			let key = openid || mobile;
+			if (exists[key]) continue;
+			exists[key] = true;
+			ret.push({
+				openid,
+				mobile,
+				name: String(item.name || '').trim(),
+				relation: String(item.relation || '').trim()
+			});
 		}
 		return ret;
 	}

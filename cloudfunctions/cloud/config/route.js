@@ -105,6 +105,9 @@ module.exports = {
 	'admin/contract_save': 'admin/admin_order_controller@saveContract#noDemo',
 	'admin/contract_del': 'admin/admin_order_controller@delContract#noDemo',
 
+	'admin/child_list': 'admin/admin_daycare_controller@getChildList',
+	'admin/child_save': 'admin/admin_daycare_controller@saveChild#noDemo',
+	'admin/child_del': 'admin/admin_daycare_controller@delChild#noDemo',
 	'admin/teacher_today': 'admin/admin_daycare_controller@getTeacherToday',
 	'admin/course_remind': 'admin/admin_daycare_controller@sendCourseRemind#noDemo',
 	'admin/leave_list': 'admin/admin_daycare_controller@getLeaveList',

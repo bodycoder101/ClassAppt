@@ -16,14 +16,13 @@ const ContractModel = require('../model/contract_model.js');
 class ChildService extends BaseService {
 
 	async getChildList(userId) {
-		let where = {
-			CHILD_USER_ID: userId,
-			CHILD_STATUS: ChildModel.STATUS.COMM
-		};
 		let orderBy = {
 			CHILD_ADD_TIME: 'asc'
 		};
-		return await ChildModel.getAll(where, '*', orderBy, 100);
+		let list = await ChildModel.getAllBig({
+			CHILD_STATUS: ChildModel.STATUS.COMM
+		}, '*', orderBy, 1000);
+		return list.filter(child => this._isGuardian(child, userId));
 	}
 
 	async saveChild(userId, {
@@ -34,21 +33,24 @@ class ChildService extends BaseService {
 		className = '',
 		memo = ''
 	}) {
+		this.AppError('孩子档案由园区后台绑定，请联系老师或管理员');
+		let guardians = this._normalizeGuardians([{
+			openid: userId,
+			relation: '主监护人'
+		}]);
 		let data = {
 			CHILD_NAME: name,
 			CHILD_SEX: sex,
 			CHILD_BIRTHDAY: birthday,
 			CHILD_CLASS: className,
-			CHILD_MEMO: memo
+			CHILD_MEMO: memo,
+			CHILD_GUARDIANS: guardians
 		};
 
 		if (id) {
-			let child = await ChildModel.getOne({
-				_id: id,
-				CHILD_USER_ID: userId,
-				CHILD_STATUS: ChildModel.STATUS.COMM
-			}, '_id');
+			let child = await this._getMyChild(userId, id, '_id,CHILD_USER_ID,CHILD_GUARDIANS');
 			if (!child) this.AppError('孩子档案不存在');
+			data.CHILD_GUARDIANS = this._mergeGuardians(child.CHILD_GUARDIANS || [], guardians);
 			await ChildModel.edit(id, data);
 			return {
 				id
@@ -63,11 +65,8 @@ class ChildService extends BaseService {
 	}
 
 	async delChild(userId, id) {
-		let child = await ChildModel.getOne({
-			_id: id,
-			CHILD_USER_ID: userId,
-			CHILD_STATUS: ChildModel.STATUS.COMM
-		}, '_id');
+		this.AppError('孩子档案由园区后台绑定，请联系老师或管理员删除');
+		let child = await this._getMyChild(userId, id, '_id');
 		if (!child) return;
 		await ChildModel.edit(id, {
 			CHILD_STATUS: ChildModel.STATUS.DEL
@@ -75,16 +74,10 @@ class ChildService extends BaseService {
 	}
 
 	async getChildRecord(userId, childId) {
-		let child = await ChildModel.getOne({
-			_id: childId,
-			CHILD_USER_ID: userId,
-			CHILD_STATUS: ChildModel.STATUS.COMM
-		});
+		let child = await this._getMyChild(userId, childId);
 		if (!child) this.AppError('孩子档案不存在');
 
-		let joinList = await JoinModel.getAllBig({
-			JOIN_USER_ID: userId
-		}, 'JOIN_IS_CHECKIN,JOIN_REASON,JOIN_MEET_ID,JOIN_MEET_TITLE,JOIN_MEET_DAY,JOIN_MEET_TIME_START,JOIN_MEET_TIME_END,JOIN_STATUS,JOIN_ADD_TIME,JOIN_FORMS', {
+		let joinList = await JoinModel.getAllBig({}, 'JOIN_IS_CHECKIN,JOIN_REASON,JOIN_MEET_ID,JOIN_MEET_TITLE,JOIN_MEET_DAY,JOIN_MEET_TIME_START,JOIN_MEET_TIME_END,JOIN_STATUS,JOIN_ADD_TIME,JOIN_FORMS', {
 			JOIN_MEET_DAY: 'desc',
 			JOIN_MEET_TIME_START: 'desc',
 			JOIN_ADD_TIME: 'desc'
@@ -95,25 +88,21 @@ class ChildService extends BaseService {
 		});
 
 		let leaveList = await LeaveModel.getAllBig({
-			LEAVE_USER_ID: userId,
 			LEAVE_CHILD_ID: childId
 		}, '*', {
 			LEAVE_ADD_TIME: 'desc'
 		}, 1000);
 		let packageList = await CoursePackageModel.getAllBig({
-			PACKAGE_USER_ID: userId,
 			PACKAGE_CHILD_ID: childId
 		}, '*', {
 			PACKAGE_ADD_TIME: 'desc'
 		}, 1000);
 		let consumeList = await CourseConsumeModel.getAllBig({
-			CONSUME_USER_ID: userId,
 			CONSUME_CHILD_ID: childId
 		}, '*', {
 			CONSUME_ADD_TIME: 'desc'
 		}, 1000);
 		let contractList = await ContractModel.getAllBig({
-			CONTRACT_USER_ID: userId,
 			CONTRACT_CHILD_ID: childId
 		}, '*', {
 			CONTRACT_ADD_TIME: 'desc'
@@ -210,6 +199,51 @@ class ChildService extends BaseService {
 			if ((forms[k].mark == 'CHILD_NAME' || forms[k].title == '孩子姓名') && util.isDefined(forms[k].val)) ret.name = forms[k].val;
 		}
 		return ret;
+	}
+
+	async _getMyChild(userId, childId, fields = '*') {
+		let child = await ChildModel.getOne({
+			_id: childId,
+			CHILD_STATUS: ChildModel.STATUS.COMM
+		}, fields);
+		if (!child) return null;
+		if (!this._isGuardian(child, userId)) return null;
+		return child;
+	}
+
+	_isGuardian(child, userId) {
+		if (!child) return false;
+		if (child.CHILD_USER_ID == userId) return true;
+		let guardians = child.CHILD_GUARDIANS || [];
+		for (let k in guardians) {
+			if (guardians[k].openid == userId) return true;
+		}
+		return false;
+	}
+
+	_normalizeGuardians(guardians = []) {
+		let ret = [];
+		let exists = {};
+		for (let k in guardians) {
+			let item = guardians[k] || {};
+			let openid = String(item.openid || '').trim();
+			let mobile = String(item.mobile || '').trim();
+			if (!openid && !mobile) continue;
+			let key = openid || mobile;
+			if (exists[key]) continue;
+			exists[key] = true;
+			ret.push({
+				openid,
+				mobile,
+				name: String(item.name || '').trim(),
+				relation: String(item.relation || '').trim()
+			});
+		}
+		return ret;
+	}
+
+	_mergeGuardians(oldGuardians = [], newGuardians = []) {
+		return this._normalizeGuardians(oldGuardians.concat(newGuardians));
 	}
 
 }

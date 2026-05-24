@@ -1,0 +1,37 @@
+<view wx:if="{{isAdmin}}">
+	<cmpt-comm-list id="cmpt-comm-list" type="admin-child" route="admin/child_list" topBottom="50" placeholder="搜索孩子/班级/监护人" bind:list="bindCommListCmpt">
+		<view slot="searchEnd">
+			<button bindtap="bindAddTap" class="btn mid radius bg-admin text-white margin-right-s">新增孩子</button>
+		</view>
+		<view class="admin-comm-list">
+			<view wx:if="{{dataList && dataList.total}}" class="load text-grey">共有{{dataList.total}}个孩子档案</view>
+			<view class="item" wx:for="{{dataList.list}}" wx:key="_id">
+				<view class="header">
+					<view class="left text-cut">{{item.CHILD_NAME}}</view>
+					<view class="right">{{item.CHILD_CLASS}}</view>
+				</view>
+				<view class="info">
+					<view class="info-item"><view class="title">生日</view><view class="mao">：</view><view class="content">{{item.CHILD_BIRTHDAY||'未填'}}</view></view>
+					<view class="info-item"><view class="title">监护人</view><view class="mao">：</view><view class="content">
+						<view wx:for="{{item.CHILD_GUARDIANS}}" wx:key="openid" wx:for-item="guardian">{{guardian.relation||'监护人'}}：{{guardian.name||'-'}} {{guardian.mobile||''}}</view>
+					</view></view>
+					<view class="oprt">
+						<view bindtap="bindEditTap" data-idx="{{index}}" class="btn margin-right-s">编辑</view>
+						<view bindtap="bindDelTap" data-id="{{item._id}}" class="btn margin-right-s">删除</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<import src="../../../../tpls/public/list_load_tpl.wxml" />
+		<template is="listLoadTpl" data="{{skin:'text-grey',dataList}}" />
+	</cmpt-comm-list>
+
+	<cmpt-modal model:show="{{formShow}}" type="dialog" title="孩子档案" bind:click="bindSaveCmpt" class="modal-form" cancelText="返回" confirmText="保存">
+		<view class="form-group"><view class="title must">姓名</view><input placeholder="孩子姓名" model:value="{{formName}}"></input></view>
+		<view class="form-group"><view class="title">性别</view><input placeholder="男/女" model:value="{{formSex}}"></input></view>
+		<view class="form-group"><view class="title">生日</view><input placeholder="2022-05-01" model:value="{{formBirthday}}"></input></view>
+		<view class="form-group"><view class="title">班级</view><input placeholder="托小班" model:value="{{formClassName}}"></input></view>
+		<view class="form-group align-start"><view class="title">监护人</view><textarea placeholder="每行一个：openid|手机号|姓名|关系" model:value="{{formGuardiansText}}" maxlength="1200" style="height:220rpx"></textarea></view>
+		<view class="form-group align-start"><view class="title">备注</view><textarea model:value="{{formMemo}}" maxlength="200" style="height:100rpx"></textarea></view>
+	</cmpt-modal>
+</view>

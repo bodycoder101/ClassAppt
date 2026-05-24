@@ -13,6 +13,7 @@ ChildModel.DB_STRUCTURE = {
 	CHILD_ID: 'string|true',
 
 	CHILD_USER_ID: 'string|true|comment=家长openid',
+	CHILD_GUARDIANS: 'array|true|default=[]|comment=监护人 [{openid,mobile,name,relation}]',
 	CHILD_NAME: 'string|true|comment=孩子姓名',
 	CHILD_SEX: 'string|false|comment=性别',
 	CHILD_BIRTHDAY: 'string|false|comment=生日',

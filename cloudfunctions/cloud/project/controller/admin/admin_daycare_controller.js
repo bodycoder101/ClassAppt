@@ -9,6 +9,51 @@ const timeUtil = require('../../../framework/utils/time_util.js');
 
 class AdminDaycareController extends BaseAdminController {
 
+	async getChildList() {
+		await this.isAdmin();
+		let rules = {
+			search: 'string|min:1|max:30|name=搜索条件',
+			page: 'must|int|default=1',
+			size: 'int',
+			isTotal: 'bool',
+			oldTotal: 'int',
+		};
+		let input = this.validateData(rules);
+		let service = new AdminDaycareService();
+		let result = await service.getChildList(input);
+		for (let k in result.list) {
+			result.list[k].CHILD_STATUS_DESC = '正常';
+			result.list[k].CHILD_ADD_TIME = timeUtil.timestamp2Time(result.list[k].CHILD_ADD_TIME);
+		}
+		return result;
+	}
+
+	async saveChild() {
+		await this.isAdmin();
+		let rules = {
+			id: 'id',
+			name: 'must|string|min:1|max:30|name=孩子姓名',
+			sex: 'string|max:10|name=性别',
+			birthday: 'string|max:20|name=生日',
+			className: 'string|max:30|name=班级',
+			memo: 'string|max:200|name=备注',
+			guardians: 'must|array|name=监护人',
+		};
+		let input = this.validateData(rules);
+		let service = new AdminDaycareService();
+		return await service.saveChild(input);
+	}
+
+	async delChild() {
+		await this.isAdmin();
+		let rules = {
+			id: 'must|id',
+		};
+		let input = this.validateData(rules);
+		let service = new AdminDaycareService();
+		await service.delChild(input.id);
+	}
+
 	async getTeacherToday() {
 		await this.isAdmin();
 		let rules = {
