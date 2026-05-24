@@ -9,7 +9,10 @@ Page({
 		id: '',
 		child: null,
 		joinList: [],
-		leaveList: []
+		leaveList: [],
+		packageList: [],
+		consumeList: [],
+		contractList: []
 	},
 
 	onLoad: async function (options) {
@@ -46,7 +49,10 @@ Page({
 				isLoad: true,
 				child: data.child,
 				joinList: data.joinList || [],
-				leaveList: data.leaveList || []
+				leaveList: data.leaveList || [],
+				packageList: data.packageList || [],
+				consumeList: data.consumeList || [],
+				contractList: data.contractList || []
 			});
 			if (data.child && data.child.CHILD_NAME) {
 				wx.setNavigationBarTitle({

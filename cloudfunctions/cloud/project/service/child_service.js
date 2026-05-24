@@ -9,6 +9,9 @@ const util = require('../../framework/utils/util.js');
 const ChildModel = require('../model/child_model.js');
 const LeaveModel = require('../model/leave_model.js');
 const JoinModel = require('../model/join_model.js');
+const CoursePackageModel = require('../model/course_package_model.js');
+const CourseConsumeModel = require('../model/course_consume_model.js');
+const ContractModel = require('../model/contract_model.js');
 
 class ChildService extends BaseService {
 
@@ -97,11 +100,32 @@ class ChildService extends BaseService {
 		}, '*', {
 			LEAVE_ADD_TIME: 'desc'
 		}, 1000);
+		let packageList = await CoursePackageModel.getAllBig({
+			PACKAGE_USER_ID: userId,
+			PACKAGE_CHILD_ID: childId
+		}, '*', {
+			PACKAGE_ADD_TIME: 'desc'
+		}, 1000);
+		let consumeList = await CourseConsumeModel.getAllBig({
+			CONSUME_USER_ID: userId,
+			CONSUME_CHILD_ID: childId
+		}, '*', {
+			CONSUME_ADD_TIME: 'desc'
+		}, 1000);
+		let contractList = await ContractModel.getAllBig({
+			CONTRACT_USER_ID: userId,
+			CONTRACT_CHILD_ID: childId
+		}, '*', {
+			CONTRACT_ADD_TIME: 'desc'
+		}, 1000);
 
 		return {
 			child,
 			joinList,
-			leaveList
+			leaveList,
+			packageList,
+			consumeList,
+			contractList
 		};
 	}
 

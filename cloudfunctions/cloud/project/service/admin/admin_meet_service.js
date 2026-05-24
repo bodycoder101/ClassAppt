@@ -16,6 +16,7 @@ const MeetModel = require('../../model/meet_model.js');
 const JoinModel = require('../../model/join_model.js');
 const DayModel = require('../../model/day_model.js');
 const NotifyService = require('../notify_service.js');
+const AdminOrderService = require('./admin_order_service.js');
 const config = require('../../../config/config.js');
 
 class AdminMeetService extends BaseAdminService {
@@ -87,6 +88,11 @@ class AdminMeetService extends BaseAdminService {
 		await JoinModel.edit(joinId, {
 			JOIN_IS_CHECKIN: Number(flag)
 		});
+		let orderService = new AdminOrderService();
+		if (Number(flag) == 1)
+			await orderService.addConsumeByJoin(joinId);
+		else
+			await orderService.cancelConsumeByJoin(joinId);
 	}
 
 	/** 管理员扫码核销 */

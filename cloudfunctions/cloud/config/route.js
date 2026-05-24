@@ -95,6 +95,16 @@ module.exports = {
 	'admin/user_data_export': 'admin/admin_export_controller@userDataExport',
 	'admin/user_data_del': 'admin/admin_export_controller@userDataDel#noDemo',
 
+	'admin/finance_stats': 'admin/admin_order_controller@getFinanceStats',
+	'admin/order_list': 'admin/admin_order_controller@getOrderList',
+	'admin/order_create': 'admin/admin_order_controller@createOrder#noDemo',
+	'admin/order_refund': 'admin/admin_order_controller@refund#noDemo',
+	'admin/package_list': 'admin/admin_order_controller@getPackageList',
+	'admin/consume_list': 'admin/admin_order_controller@getConsumeList',
+	'admin/contract_list': 'admin/admin_order_controller@getContractList',
+	'admin/contract_save': 'admin/admin_order_controller@saveContract#noDemo',
+	'admin/contract_del': 'admin/admin_order_controller@delContract#noDemo',
+
 	'admin/teacher_today': 'admin/admin_daycare_controller@getTeacherToday',
 	'admin/course_remind': 'admin/admin_daycare_controller@sendCourseRemind#noDemo',
 	'admin/leave_list': 'admin/admin_daycare_controller@getLeaveList',

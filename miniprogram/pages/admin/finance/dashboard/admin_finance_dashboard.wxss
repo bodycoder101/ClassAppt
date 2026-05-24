@@ -1,0 +1,49 @@
+.finance-page {
+	padding: 24rpx;
+}
+
+.stat {
+	padding: 28rpx;
+	margin: 10rpx;
+	border-radius: 8rpx;
+}
+
+.stat .num {
+	font-size: 42rpx;
+	font-weight: bold;
+	color: #2499f2;
+}
+
+.stat .label {
+	margin-top: 8rpx;
+	color: #666;
+}
+
+.panel {
+	margin-top: 24rpx;
+	padding: 24rpx;
+	border-radius: 8rpx;
+}
+
+.panel-title {
+	font-size: 32rpx;
+	font-weight: bold;
+	margin-bottom: 12rpx;
+}
+
+.rank {
+	display: flex;
+	justify-content: space-between;
+	padding: 16rpx 0;
+	border-top: 1rpx solid #eee;
+}
+
+.rank .name {
+	flex: 1;
+	min-width: 0;
+}
+
+.rank .cnt {
+	color: #666;
+	margin-left: 20rpx;
+}
