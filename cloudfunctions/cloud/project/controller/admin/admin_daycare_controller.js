@@ -9,6 +9,22 @@ const timeUtil = require('../../../framework/utils/time_util.js');
 
 class AdminDaycareController extends BaseAdminController {
 
+	async getTeacherToday() {
+		await this.isAdmin();
+		let rules = {
+			day: 'string|name=日期',
+			teacher: 'string|max:50|name=老师',
+		};
+		let input = this.validateData(rules);
+		let service = new AdminDaycareService();
+		let list = await service.getTeacherToday(input.day || timeUtil.time('Y-M-D'), input.teacher || '');
+		return {
+			day: input.day || timeUtil.time('Y-M-D'),
+			week: timeUtil.week(input.day || timeUtil.time('Y-M-D')),
+			list
+		};
+	}
+
 	async getLeaveList() {
 		await this.isAdmin();
 		let rules = {
@@ -29,6 +45,17 @@ class AdminDaycareController extends BaseAdminController {
 			result.list[k].LEAVE_ADMIN_TIME = result.list[k].LEAVE_ADMIN_TIME ? timeUtil.timestamp2Time(result.list[k].LEAVE_ADMIN_TIME) : '';
 		}
 		return result;
+	}
+
+	async sendCourseRemind() {
+		await this.isAdmin();
+		let rules = {
+			meetId: 'must|id',
+			timeMark: 'must|string',
+		};
+		let input = this.validateData(rules);
+		let service = new AdminDaycareService();
+		return await service.sendCourseRemind(input.meetId, input.timeMark);
 	}
 
 	async statusLeave() {

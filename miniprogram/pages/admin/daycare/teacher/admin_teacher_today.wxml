@@ -1,0 +1,56 @@
+<view wx:if="{{!isLoad}}" class="margin-top load loading text-l text-admin"></view>
+
+<view wx:if="{{isLoad && isAdmin}}" class="teacher-page">
+	<view class="date-bar bg-white">
+		<button bindtap="bindPrevTap" class="btn sm bg-grey light"><text class="icon-back"></text></button>
+		<view class="date-main">
+			<view class="date">{{day}}</view>
+			<view class="week text-grey">{{week}}</view>
+		</view>
+		<button bindtap="bindNextTap" class="btn sm bg-grey light"><text class="icon-right"></text></button>
+	</view>
+
+	<view class="tools">
+		<button bindtap="bindTodayTap" class="btn mid bg-blue light margin-right-s">今天</button>
+		<button bindtap="bindRefreshTap" class="btn mid bg-grey light">刷新</button>
+	</view>
+
+	<view wx:if="{{!list.length}}" class="load notexist text-grey">当日暂无课程</view>
+
+	<view class="schedule-list">
+		<view class="schedule card-project shadow-project" wx:for="{{list}}" wx:key="timeMark" wx:for-index="scheduleIndex">
+			<view class="schedule-head">
+				<view class="time">{{item.start}}～{{item.end}}</view>
+				<view class="cnt">{{item.checkinCnt}}/{{item.studentCnt}} 已签到</view>
+			</view>
+			<view class="title content-cut-two">{{item.meetTitle}}</view>
+			<view class="meta">
+				<text wx:if="{{item.teacher}}" class="margin-right-s">老师：{{item.teacher}}</text>
+				<text wx:if="{{item.place}}" class="margin-right-s">地点：{{item.place}}</text>
+				<text wx:if="{{item.className}}">班级：{{item.className}}</text>
+			</view>
+			<view class="schedule-op">
+				<button bindtap="bindRemindTap" data-idx="{{scheduleIndex}}" class="btn sm bg-blue light">发送提醒</button>
+			</view>
+
+			<view wx:if="{{!item.students.length}}" class="empty-student text-grey">暂无预约学生</view>
+			<view class="student" wx:for="{{item.students}}" wx:key="_id" wx:for-item="student" wx:for-index="studentIndex">
+				<view class="student-main">
+					<view class="name">
+						{{student.CHILD_NAME}}
+						<text wx:if="{{student.JOIN_STATUS==0}}" class="tag small bg-orange light radius margin-left-xs">待审核</text>
+						<text wx:elif="{{student.JOIN_IS_CHECKIN==1}}" class="tag small bg-green light radius margin-left-xs">已签到</text>
+						<text wx:else class="tag small bg-grey light radius margin-left-xs">未签到</text>
+					</view>
+					<view class="form text-grey content-cut-two">
+						<text wx:for="{{student.JOIN_FORMS}}" wx:key="mark" wx:for-item="form" wx:if="{{form.mark!='CHILD_ID' && form.mark!='CHILD_NAME'}}">{{form.title}}：{{form.val}} </text>
+					</view>
+				</view>
+				<view class="student-op" wx:if="{{student.JOIN_STATUS==1}}">
+					<button wx:if="{{student.JOIN_IS_CHECKIN==0}}" bindtap="bindCheckinTap" data-scheduleidx="{{scheduleIndex}}" data-studentidx="{{studentIndex}}" data-flag="1" class="btn sm bg-purple light">签到</button>
+					<button wx:else bindtap="bindCheckinTap" data-scheduleidx="{{scheduleIndex}}" data-studentidx="{{studentIndex}}" data-flag="0" class="btn sm bg-grey light">取消</button>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>

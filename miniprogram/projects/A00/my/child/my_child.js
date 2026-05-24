@@ -78,6 +78,13 @@ Page({
 		});
 	},
 
+	bindRecordTap: function (e) {
+		let id = pageHelper.dataset(e, 'id');
+		wx.navigateTo({
+			url: '../child_record/child_record?id=' + id
+		});
+	},
+
 	bindSaveCmpt: async function () {
 		if (!this.data.formName) return pageHelper.showModal('请填写孩子姓名');
 		try {

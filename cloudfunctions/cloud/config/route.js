@@ -31,6 +31,7 @@ module.exports = {
 	'my/child_list': 'my_controller@getChildList',
 	'my/child_save': 'my_controller@saveChild',
 	'my/child_del': 'my_controller@delChild',
+	'my/child_record': 'my_controller@getChildRecord',
 	'my/leave_apply': 'my_controller@applyLeave',
 	'my/leave_list': 'my_controller@getLeaveList',
 	'my/leave_cancel': 'my_controller@cancelLeave',
@@ -94,6 +95,8 @@ module.exports = {
 	'admin/user_data_export': 'admin/admin_export_controller@userDataExport',
 	'admin/user_data_del': 'admin/admin_export_controller@userDataDel#noDemo',
 
+	'admin/teacher_today': 'admin/admin_daycare_controller@getTeacherToday',
+	'admin/course_remind': 'admin/admin_daycare_controller@sendCourseRemind#noDemo',
 	'admin/leave_list': 'admin/admin_daycare_controller@getLeaveList',
 	'admin/leave_status': 'admin/admin_daycare_controller@statusLeave#noDemo',
 
