@@ -1,3 +1,39 @@
 .modal-form input {
 	text-align: right;
 }
+
+.child-add-btn {
+	min-width: 180rpx;
+	height: 64rpx;
+	line-height: 64rpx;
+	padding: 0 28rpx;
+	border-radius: 8rpx;
+	background: #1456f0;
+	color: #fff;
+	font-size: 28rpx;
+	font-weight: 600;
+	box-shadow: 0 8rpx 18rpx rgba(20, 86, 240, .24);
+}
+
+.child-add-btn::after {
+	border: 0;
+}
+
+.child-op-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 112rpx;
+	height: 52rpx;
+	padding: 0 22rpx;
+	border: 1rpx solid #1456f0;
+	border-radius: 8rpx;
+	color: #1456f0;
+	background: #fff;
+	font-size: 26rpx;
+}
+
+.child-op-btn.danger {
+	border-color: #d93a2f;
+	color: #d93a2f;
+}

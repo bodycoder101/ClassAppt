@@ -1,7 +1,7 @@
 <view wx:if="{{isAdmin}}">
 	<cmpt-comm-list id="cmpt-comm-list" type="admin-child" route="admin/child_list" topBottom="50" placeholder="搜索孩子/班级/监护人" bind:list="bindCommListCmpt">
 		<view slot="searchEnd">
-			<button bindtap="bindAddTap" class="btn mid radius bg-admin text-white margin-right-s">新增孩子</button>
+			<button bindtap="bindAddTap" class="child-add-btn margin-right-s">新增孩子</button>
 		</view>
 		<view class="admin-comm-list">
 			<view wx:if="{{dataList && dataList.total}}" class="load text-grey">共有{{dataList.total}}个孩子档案</view>
@@ -16,8 +16,8 @@
 						<view wx:for="{{item.CHILD_GUARDIANS}}" wx:key="openid" wx:for-item="guardian">{{guardian.relation||'监护人'}}：{{guardian.name||'-'}} {{guardian.mobile||''}}</view>
 					</view></view>
 					<view class="oprt">
-						<view bindtap="bindEditTap" data-idx="{{index}}" class="btn margin-right-s">编辑</view>
-						<view bindtap="bindDelTap" data-id="{{item._id}}" class="btn margin-right-s">删除</view>
+						<view bindtap="bindEditTap" data-idx="{{index}}" class="child-op-btn margin-right-s">编辑</view>
+						<view bindtap="bindDelTap" data-id="{{item._id}}" class="child-op-btn danger margin-right-s">删除</view>
 					</view>
 				</view>
 			</view>
